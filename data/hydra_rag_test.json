@@ -1,0 +1,122 @@
+[
+  {
+    "query_id": 1,
+    "ground_truth_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "citation_excerpt": "Article 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.",
+    "supporting_regulation_id": 1
+  },
+  {
+    "query_id": 2,
+    "ground_truth_answer": "Administrative penalties for negligent data processing violations may reach five percent of annual regional turnover or ten million compliance units.",
+    "citation_excerpt": "Article 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units.",
+    "supporting_regulation_id": 1
+  },
+  {
+    "query_id": 4,
+    "ground_truth_answer": "Financial institutions are required to retain customer identity and transaction records for a minimum of seven years.",
+    "citation_excerpt": "Section 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.",
+    "supporting_regulation_id": 2
+  },
+  {
+    "query_id": 5,
+    "ground_truth_answer": "Repeated reporting failures may result in license suspension and fines up to twelve million compliance units.",
+    "citation_excerpt": "Section 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "supporting_regulation_id": 2
+  },
+  {
+    "query_id": 7,
+    "ground_truth_answer": "Material environmental incidents must be disclosed within fifteen calendar days together with supporting remediation documentation.",
+    "citation_excerpt": "Clause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.",
+    "supporting_regulation_id": 3
+  },
+  {
+    "query_id": 9,
+    "ground_truth_answer": "Healthcare systems processing biometric information must implement multifactor authentication for privileged accounts.",
+    "citation_excerpt": "Provision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.",
+    "supporting_regulation_id": 4
+  },
+  {
+    "query_id": 11,
+    "ground_truth_answer": "Critical system operators must report material cyber incidents within twenty-four hours of confirmation and cooperate with supervisory investigations.",
+    "citation_excerpt": "Rule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.",
+    "supporting_regulation_id": 5
+  },
+  {
+    "query_id": 13,
+    "ground_truth_answer": "Organizations must provide requested compliance and operational records within ten business days when requested by regulators.",
+    "citation_excerpt": "Entities shall cooperate fully with lawful inspection requests and provide requested records within ten business days.",
+    "supporting_regulation_id": 5
+  },
+  {
+    "query_id": 14,
+    "ground_truth_answer": "Organizations transferring regulated information to third parties remain responsible for ensuring equivalent compliance standards and contractual safeguards.",
+    "citation_excerpt": "Entities engaging third-party service providers shall ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "supporting_regulation_id": 6
+  },
+  {
+    "query_id": 16,
+    "ground_truth_answer": "Annual independent reviews are mandatory, and material weaknesses identified during assessments must be remediated within ninety calendar days unless an extension is granted.",
+    "citation_excerpt": "Independent reviews shall be conducted annually, and any material weaknesses identified during internal or external assessments shall be remediated within ninety calendar days unless an extension is authorized by the supervisory authority.",
+    "supporting_regulation_id": 7
+  },
+  {
+    "query_id": 18,
+    "ground_truth_answer": "Financial institutions must apply enhanced due diligence to transactions exceeding prescribed reporting thresholds.",
+    "citation_excerpt": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.",
+    "supporting_regulation_id": 7
+  },
+  {
+    "query_id": 20,
+    "ground_truth_answer": "Covered enterprises are required to publish annual sustainability disclosures verified by an independent assurance provider.",
+    "citation_excerpt": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.",
+    "supporting_regulation_id": 8
+  },
+  {
+    "query_id": 22,
+    "ground_truth_answer": "Unauthorized disclosure of patient information triggers mandatory internal review within forty-eight hours.",
+    "citation_excerpt": "Provision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.",
+    "supporting_regulation_id": 9
+  },
+  {
+    "query_id": 24,
+    "ground_truth_answer": "Organizations must maintain offline backup procedures that are tested at least once every six months.",
+    "citation_excerpt": "Rule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.",
+    "supporting_regulation_id": 10
+  },
+  {
+    "query_id": 27,
+    "ground_truth_answer": "Entities processing personal information beyond twenty-four months must conduct quarterly reviews and maintain documented retention justifications.",
+    "citation_excerpt": "Article 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.",
+    "supporting_regulation_id": 11
+  },
+  {
+    "query_id": 30,
+    "ground_truth_answer": "Suspicious activity reports must be submitted to the Financial Intelligence Authority within five business days of internal escalation.",
+    "citation_excerpt": "Section 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.",
+    "supporting_regulation_id": 12
+  },
+  {
+    "query_id": 33,
+    "ground_truth_answer": "Supply chain labor practices must be reviewed annually through risk-based assessments.",
+    "citation_excerpt": "Clause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.",
+    "supporting_regulation_id": 13
+  },
+  {
+    "query_id": 37,
+    "ground_truth_answer": "Hospitals are required to conduct semiannual compliance training for administrative and clinical personnel.",
+    "citation_excerpt": "Provision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.",
+    "supporting_regulation_id": 14
+  },
+  {
+    "query_id": 42,
+    "ground_truth_answer": "Third-party vendors with network access must undergo annual security assessments and comply with contractual safeguards.",
+    "citation_excerpt": "Rule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.",
+    "supporting_regulation_id": 15
+  },
+  {
+    "query_id": 47,
+    "ground_truth_answer": "This regulation enters into force one hundred and twenty days after publication, though transitional compliance measures may be granted for entities showing substantial implementation progress.",
+    "citation_excerpt": "Final Provision. This Regulation shall enter into force one hundred and twenty days after publication in the official register. Transitional compliance measures may be granted for entities demonstrating substantial implementation progress.",
+    "supporting_regulation_id": 16
+  }
+]
