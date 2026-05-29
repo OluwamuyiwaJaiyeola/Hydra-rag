@@ -9,3 +9,8 @@ HUGGINGFACE_MODEL = os.getenv("HUGGINGFACE_MODEL", "sentence-transformers/all-Mi
 
 if not PINECONE_API_KEY:
     raise ValueError("PINECONE_API_KEY is not set in .env")
+
+HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+
+if not HUGGINGFACE_API_TOKEN:
+    raise ValueError("HUGGINGFACE_API_TOKEN is not set in .env")
