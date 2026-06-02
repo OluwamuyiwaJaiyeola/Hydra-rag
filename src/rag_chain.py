@@ -15,15 +15,33 @@ def get_pinecone_index():
     pc = Pinecone(api_key=PINECONE_API_KEY)
     return pc.Index(PINECONE_INDEX_NAME)
 
-def retrieve_chunks(query: str, index, model: SentenceTransformer, top_k: int = 2) -> list:
+def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
     query_vector = model.encode(query, normalize_embeddings=True).tolist()
-    results = index.query(vector=query_vector, top_k=top_k, include_metadata=True)
-    matches = results["matches"]
+
+    # Fetch extra to allow for deduplication across jurisdictions
+    raw_results = index.query(
+        vector=query_vector,
+        top_k=20,
+        include_metadata=True
+    )
+    matches = raw_results["matches"]
+
+    # Deduplicate by chunk_text keeping highest score per unique clause
+    seen_texts = set()
+    deduplicated = []
+    for m in matches:
+        key = m["metadata"].get("chunk_text", "")[:80]
+        if key not in seen_texts:
+            seen_texts.add(key)
+            deduplicated.append(m)
+        if len(deduplicated) >= top_k:
+            break
+
+    # Apply relevance threshold
     RELEVANCE_THRESHOLD = 0.35
-    filtered = [m for m in matches if m["score"] >= RELEVANCE_THRESHOLD]
-    if not filtered:
-        return []
-    return filtered
+    filtered = [m for m in deduplicated if m["score"] >= RELEVANCE_THRESHOLD]
+
+    return filtered if filtered else []
 
 def format_context(matches: list) -> str:
     context_parts = []
