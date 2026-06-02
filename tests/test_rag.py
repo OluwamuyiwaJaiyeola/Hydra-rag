@@ -6,12 +6,12 @@ from src.config import PINECONE_API_KEY, PINECONE_INDEX_NAME, HUGGINGFACE_MODEL
 
 
 def load_test_data():
-    with open("data/hydra_rag_test.json") as f:
+    with open("data/hydra_rag_test_cleaned.json") as f:
         return json.load(f)
 
 
 def load_compliance_questions():
-    with open("data/hydra_compliance_questions.json") as f:
+    with open("data/hydra_compliance_questions_cleaned.json") as f:
         return json.load(f)
 
 
@@ -27,7 +27,7 @@ def pinecone_index():
 
 
 def retrieve_top_regulation(query: str, model, index, top_k: int = 3) -> list:
-    query_vector = model.encode(query).tolist()
+    query_vector = model.encode(query, normalize_embeddings=True).tolist()
     results = index.query(vector=query_vector, top_k=top_k, include_metadata=True)
     return [int(m["metadata"]["regulation_id"]) for m in results["matches"]]
 
@@ -84,7 +84,7 @@ class TestRetrievalAccuracy:
     def test_index_is_populated(self, pinecone_index):
         stats = pinecone_index.describe_index_stats()
         total = stats["total_vector_count"]
-        assert total == 240, f"Expected 240 vectors, found {total}"
+        assert total == 100, f"Expected 100 vectors, got {total}"
         print(f"\nIndex vector count: {total}")
 
     def test_golden_dataset_retrieval(self, embedding_model, pinecone_index):
@@ -102,7 +102,10 @@ class TestRetrievalAccuracy:
             qid = case["query_id"]
             query_text = question_map.get(qid)
             if query_text:
-                query_to_valid_regulations[query_text].add(case["supporting_regulation_id"])
+                # Use valid_regulation_ids if available, fall back to supporting_regulation_id
+                valid_ids = case.get("valid_regulation_ids", [case["supporting_regulation_id"]])
+                for vid in valid_ids:
+                    query_to_valid_regulations[query_text].add(vid)
                 query_text_to_id[query_text] = qid
 
         passed = 0

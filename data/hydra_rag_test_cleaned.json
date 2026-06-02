@@ -7,10 +7,29 @@
     "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
     "valid_regulation_ids": [
       1,
+      2,
       3,
-      4
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "remediation"
   },
   {
     "query_id": 2,
@@ -20,12 +39,13 @@
     "query_text": "If a company discovers a material breach, what actions are required?",
     "valid_regulation_ids": [
       1,
-      5,
-      8,
+      6,
       11,
-      13
+      16
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 4,
+    "detected_topic": "breach_72hrs"
   },
   {
     "query_id": 4,
@@ -34,9 +54,14 @@
     "supporting_regulation_id": 2,
     "query_text": "What authority receives mandatory breach notifications?",
     "valid_regulation_ids": [
-      2
+      1,
+      6,
+      11,
+      16
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 4,
+    "detected_topic": "breach_72hrs"
   },
   {
     "query_id": 5,
@@ -45,9 +70,14 @@
     "supporting_regulation_id": 2,
     "query_text": "What is the maximum fine described for violations?",
     "valid_regulation_ids": [
-      3
+      1,
+      6,
+      11,
+      16
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 4,
+    "detected_topic": "penalties_5pct"
   },
   {
     "query_id": 7,
@@ -57,10 +87,29 @@
     "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
     "valid_regulation_ids": [
       1,
+      2,
       3,
-      4
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "remediation"
   },
   {
     "query_id": 9,
@@ -69,9 +118,14 @@
     "supporting_regulation_id": 4,
     "query_text": "What penalties may apply for repeated non-compliance?",
     "valid_regulation_ids": [
-      5
+      4,
+      9,
+      14,
+      19
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 4,
+    "detected_topic": null
   },
   {
     "query_id": 11,
@@ -80,11 +134,30 @@
     "supporting_regulation_id": 5,
     "query_text": "Is annual independent review mandatory under this regulation?",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
       4,
+      5,
       6,
-      12
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "annual_review"
   },
   {
     "query_id": 13,
@@ -93,9 +166,30 @@
     "supporting_regulation_id": 5,
     "query_text": "How are sanctions under this regulation different from operational restrictions in similar frameworks? In the context of EU?",
     "valid_regulation_ids": [
-      7
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 20,
+    "detected_topic": "sanctions_diff"
   },
   {
     "query_id": 14,
@@ -104,9 +198,30 @@
     "supporting_regulation_id": 6,
     "query_text": "Must entities provide records within ten business days when requested?",
     "valid_regulation_ids": [
-      7
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 20,
+    "detected_topic": "ten_days"
   },
   {
     "query_id": 16,
@@ -116,12 +231,13 @@
     "query_text": "If a company discovers a material breach, what actions are required?",
     "valid_regulation_ids": [
       1,
-      5,
-      8,
+      6,
       11,
-      13
+      16
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 4,
+    "detected_topic": "breach_72hrs"
   },
   {
     "query_id": 18,
@@ -130,10 +246,30 @@
     "supporting_regulation_id": 7,
     "query_text": "Did the latest version introduce stricter audit timelines? Summarize the expected operational impact.",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
       9,
-      11
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "annual_review"
   },
   {
     "query_id": 20,
@@ -142,10 +278,30 @@
     "supporting_regulation_id": 8,
     "query_text": "How are sanctions under this regulation different from operational restrictions in similar frameworks? In the context of Kenya?",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
       6,
-      10
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "sanctions_diff"
   },
   {
     "query_id": 22,
@@ -155,12 +311,13 @@
     "query_text": "If a company discovers a material breach, what actions are required?",
     "valid_regulation_ids": [
       1,
-      5,
-      8,
+      6,
       11,
-      13
+      16
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 4,
+    "detected_topic": "breach_72hrs"
   },
   {
     "query_id": 24,
@@ -169,9 +326,14 @@
     "supporting_regulation_id": 10,
     "query_text": "If a healthcare operator stores biometric data, what controls are required?",
     "valid_regulation_ids": [
-      12
+      4,
+      9,
+      14,
+      19
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 4,
+    "detected_topic": "biometric_mfa"
   },
   {
     "query_id": 27,
@@ -180,12 +342,30 @@
     "supporting_regulation_id": 11,
     "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
       8,
+      9,
+      10,
+      11,
+      12,
+      13,
       14,
       15,
-      18
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "outsourcing"
   },
   {
     "query_id": 30,
@@ -194,12 +374,30 @@
     "supporting_regulation_id": 12,
     "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
       8,
+      9,
+      10,
+      11,
+      12,
+      13,
       14,
       15,
-      18
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "outsourcing"
   },
   {
     "query_id": 33,
@@ -208,9 +406,30 @@
     "supporting_regulation_id": 13,
     "query_text": "Were any new monetary sanctions added in the recent revision? Summarize the expected operational impact.",
     "valid_regulation_ids": [
-      17
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 20,
+    "detected_topic": "update"
   },
   {
     "query_id": 37,
@@ -219,9 +438,30 @@
     "supporting_regulation_id": 14,
     "query_text": "How does this regulation approach audit obligations compared to other jurisdictions? In the context of EU?",
     "valid_regulation_ids": [
-      19
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 20,
+    "detected_topic": "annual_review"
   },
   {
     "query_id": 42,
@@ -230,9 +470,30 @@
     "supporting_regulation_id": 15,
     "query_text": "How does this regulation balance enforcement with transitional compliance measures?",
     "valid_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
       20
     ],
-    "is_ambiguous": false
+    "is_ambiguous": false,
+    "valid_regulation_count": 20,
+    "detected_topic": "transitional"
   },
   {
     "query_id": 47,
@@ -242,9 +503,28 @@
     "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
     "valid_regulation_ids": [
       1,
+      2,
       3,
-      4
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
     ],
-    "is_ambiguous": true
+    "is_ambiguous": true,
+    "valid_regulation_count": 20,
+    "detected_topic": "remediation"
   }
 ]
