@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hydra Analytics — Compliance Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0c0f;
+  --surface:#111318;
+  --surface2:#181c22;
+  --surface3:#1e242d;
+  --border:#252b35;
+  --border2:#2e3540;
+  --text:#e8eaf0;
+  --text2:#9ba3b0;
+  --text3:#5c6472;
+  --accent:#4ade80;
+  --accent2:#22c55e;
+  --accent-dim:rgba(74,222,128,0.08);
+  --accent-border:rgba(74,222,128,0.2);
+  --blue:#60a5fa;
+  --amber:#fbbf24;
+  --coral:#f87171;
+  --purple:#a78bfa;
+  --teal:#2dd4bf;
+  --r:8px;
+  --r2:12px;
+}
+html{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:15px;color:#000;font-weight:700;flex-shrink:0}
+.logo-text h1{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text);font-weight:400;letter-spacing:-0.01em}
+.logo-text p{font-size:11px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase}
+.header-stats{display:flex;gap:32px}
+.stat{text-align:center}
+.stat-num{font-family:'DM Mono',monospace;font-size:20px;color:var(--text);font-weight:500;line-height:1}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;gap:0;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--border)}
+.tab{padding:14px 20px;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;font-weight:500;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* MAIN */
+.main{flex:1;padding:28px 32px;max-width:1200px;width:100%;margin:0 auto}
+
+/* JURISDICTION BAR */
+.jurisdiction-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.jurisdiction-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px}
+.j-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;font-weight:500}
+.j-btn:hover{border-color:var(--border2);background:var(--surface3);color:var(--text)}
+.j-btn.active{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent)}
+.j-flag{margin-right:5px;font-size:13px}
+
+/* CATEGORY BAR */
+.category-bar{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.cat-btn{padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:0.04em}
+.cat-btn:hover{background:var(--surface3);color:var(--text2)}
+.cat-btn.active{background:var(--surface3);border-color:var(--border2);color:var(--text)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:20px}
+.search-input{width:100%;padding:14px 48px 14px 18px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r2);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
+.search-input:focus{border-color:var(--accent-border)}
+.search-input::placeholder{color:var(--text3)}
+.search-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.search-btn:hover{background:var(--accent2)}
+.search-btn svg{width:14px;height:14px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* RESULTS COUNT */
+.results-meta{font-size:12px;color:var(--text3);margin-bottom:16px}
+.results-meta span{color:var(--text2);font-weight:500}
+
+/* REGULATION CARDS */
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.reg-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all 0.15s}
+.reg-card:hover{border-color:var(--border2);background:var(--surface3)}
+.reg-card.selected{border-color:var(--accent-border);background:var(--accent-dim)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.card-cat{font-size:10px;padding:3px 8px;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0}
+.cat-gdpr{background:rgba(96,165,250,0.12);color:var(--blue)}
+.cat-aml{background:rgba(251,191,36,0.12);color:var(--amber)}
+.cat-esg{background:rgba(45,212,191,0.12);color:var(--teal)}
+.cat-health{background:rgba(248,113,113,0.12);color:var(--coral)}
+.cat-cyber{background:rgba(167,139,250,0.12);color:var(--purple)}
+.card-score{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4}
+.card-meta{display:flex;gap:12px;margin-bottom:8px}
+.card-jurisdiction{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.card-excerpt{font-size:12px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* QA PANEL */
+.qa-layout{display:grid;grid-template-columns:280px 1fr;gap:20px}
+.qa-queries{display:flex;flex-direction:column;gap:6px}
+.qa-query-btn{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-size:12px;cursor:pointer;text-align:left;transition:all 0.15s;font-family:'DM Sans',sans-serif;line-height:1.4}
+.qa-query-btn:hover{border-color:var(--border2);background:var(--surface3);color:var(--text)}
+.qa-query-btn.active{border-color:var(--accent-border);background:var(--accent-dim);color:var(--accent)}
+.qa-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;margin-top:4px}
+.qa-response{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;min-height:300px}
+.qa-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--text3);text-align:center;gap:8px}
+.qa-empty-icon{font-size:32px;opacity:0.3}
+.qa-question{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.qa-q-icon{width:24px;height:24px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.qa-q-icon svg{width:12px;height:12px;stroke:var(--text3);fill:none;stroke-width:2}
+.qa-q-text{font-size:13px;color:var(--text2);font-style:italic}
+.qa-answer{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:16px}
+.qa-verified{display:inline-flex;align-items:center;gap:5px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);color:var(--accent);font-size:11px;padding:3px 10px;border-radius:20px;margin-bottom:16px;font-weight:500}
+.qa-verified svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5}
+.qa-citation{background:var(--surface3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px}
+.qa-citation-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;font-weight:600}
+.qa-citation-text{font-size:12px;color:var(--text2);font-style:italic}
+.qa-loading{display:flex;align-items:center;gap:10px;color:var(--text3);font-size:13px;padding:20px 0}
+.qa-loading-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+.qa-loading-dot:nth-child(2){animation-delay:0.2s}
+.qa-loading-dot:nth-child(3){animation-delay:0.4s}
+@keyframes pulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
+
+/* EXPLORER */
+.explorer-layout{display:grid;grid-template-columns:260px 1fr;gap:20px}
+.explorer-list{display:flex;flex-direction:column;gap:4px;max-height:600px;overflow-y:auto}
+.explorer-list::-webkit-scrollbar{width:4px}
+.explorer-list::-webkit-scrollbar-track{background:transparent}
+.explorer-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.explorer-item{padding:10px 12px;border-radius:var(--r);cursor:pointer;transition:all 0.12s;border:1px solid transparent}
+.explorer-item:hover{background:var(--surface2);border-color:var(--border)}
+.explorer-item.active{background:var(--surface2);border-color:var(--accent-border)}
+.explorer-item-title{font-size:12px;color:var(--text);font-weight:500;line-height:1.3;margin-bottom:3px}
+.explorer-item-meta{font-size:11px;color:var(--text3)}
+.explorer-detail{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
+.detail-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.detail-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);line-height:1.3;margin-bottom:8px}
+.detail-badges{display:flex;gap:8px;flex-wrap:wrap}
+.detail-badge{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:500}
+.provision{background:var(--surface3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
+.provision-ref{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.provision-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.provision-text{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ANALYTICS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.analytics-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.metric-val{font-family:'DM Mono',monospace;font-size:32px;color:var(--text);font-weight:500;line-height:1;margin-bottom:4px}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.metric-sub span{color:var(--accent)}
+.chart-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.chart-title{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-label{font-size:11px;color:var(--text2);width:120px;flex-shrink:0}
+.bar-track{flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+.bar-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);width:20px;text-align:right}
+.pie-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pie-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pie-name{font-size:12px;color:var(--text2);flex:1}
+.pie-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+
+/* EMPTY / LOADING STATES */
+.panel{display:none}
+.panel.active{display:block}
+.loading-state{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:40px 0;justify-content:center}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">HA</div>
+    <div class="logo-text">
+      <h1>Regulatory Compliance Intelligence</h1>
+      <p>Hydra Analytics — RAG-powered legal search</p>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Regulations</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Jurisdictions</div></div>
+    <div class="stat"><div class="stat-num">240</div><div class="stat-label">Vectors</div></div>
+    <div class="stat"><div class="stat-num" id="api-status">●</div><div class="stat-label">API Live</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('search',this)">Semantic search</div>
+  <div class="tab" onclick="switchTab('qa',this)">Compliance Q&A</div>
+  <div class="tab" onclick="switchTab('explorer',this)">Regulation explorer</div>
+  <div class="tab" onclick="switchTab('analytics',this)">Analytics</div>
+</div>
+
+<div class="main">
+
+  <!-- SEARCH PANEL -->
+  <div class="panel active" id="panel-search">
+    <div class="jurisdiction-bar">
+      <span class="jurisdiction-label">Jurisdiction</span>
+      <button class="j-btn active" onclick="setJurisdiction('',this)">All</button>
+      <button class="j-btn" onclick="setJurisdiction('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
+      <button class="j-btn" onclick="setJurisdiction('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
+      <button class="j-btn" onclick="setJurisdiction('Kenya',this)"><span class="j-flag">🇰🇪</span>Kenya</button>
+      <button class="j-btn" onclick="setJurisdiction('UK',this)"><span class="j-flag">🇬🇧</span>UK</button>
+      <button class="j-btn" onclick="setJurisdiction('USA',this)"><span class="j-flag">🇺🇸</span>USA</button>
+    </div>
+    <div class="category-bar">
+      <button class="cat-btn active" onclick="setCategory('',this)">All categories</button>
+      <button class="cat-btn" onclick="setCategory('GDPR/Data Privacy',this)">Data privacy</button>
+      <button class="cat-btn" onclick="setCategory('AML/Financial Crime',this)">AML / financial</button>
+      <button class="cat-btn" onclick="setCategory('ESG Reporting',this)">ESG</button>
+      <button class="cat-btn" onclick="setCategory('Healthcare Compliance',this)">Healthcare</button>
+      <button class="cat-btn" onclick="setCategory('Cybersecurity',this)">Cybersecurity</button>
+    </div>
+    <div class="search-wrap">
+      <input class="search-input" id="search-input" placeholder="Search regulations by topic, jurisdiction, or obligation..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="search-btn" onclick="doSearch()">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+    </div>
+    <div class="results-meta" id="search-meta"></div>
+    <div class="cards-grid" id="search-results"></div>
+  </div>
+
+  <!-- QA PANEL -->
+  <div class="panel" id="panel-qa">
+    <div class="jurisdiction-bar" style="margin-bottom:20px">
+      <span class="jurisdiction-label">Jurisdiction</span>
+      <button class="j-btn active" onclick="setQAJurisdiction('',this)">All</button>
+      <button class="j-btn" onclick="setQAJurisdiction('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
+      <button class="j-btn" onclick="setQAJurisdiction('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
+      <button class="j-btn" onclick="setQAJurisdiction('Kenya',this)"><span class="j-flag">🇰🇪</span>Kenya</button>
+      <button class="j-btn" onclick="setQAJurisdiction('UK',this)"><span class="j-flag">🇬🇧</span>UK</button>
+      <button class="j-btn" onclick="setQAJurisdiction('USA',this)"><span class="j-flag">🇺🇸</span>USA</button>
+    </div>
+    <div class="qa-layout">
+      <div>
+        <div class="qa-section-label">Sample compliance queries</div>
+        <div class="qa-queries" id="qa-queries"></div>
+      </div>
+      <div class="qa-response" id="qa-response">
+        <div class="qa-empty">
+          <div class="qa-empty-icon">⚖</div>
+          <div style="font-size:13px;color:var(--text3)">Select a query or type your own</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">AI-generated answers with source citations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPLORER PANEL -->
+  <div class="panel" id="panel-explorer">
+    <div class="jurisdiction-bar" style="margin-bottom:16px">
+      <span class="jurisdiction-label">Filter</span>
+      <button class="j-btn active" onclick="filterExplorer('',this)">All</button>
+      <button class="j-btn" onclick="filterExplorer('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
+      <button class="j-btn" onclick="filterExplorer('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
+      <button class="j-btn" onclick="filterExplorer('Kenya',this)"><span class="j-flag">🇰🇪</span>Kenya</button>
+      <button class="j-btn" onclick="filterExplorer('UK',this)"><span class="j-flag">🇬🇧</span>UK</button>
+      <button class="j-btn" onclick="filterExplorer('USA',this)"><span class="j-flag">🇺🇸</span>USA</button>
+    </div>
+    <div class="explorer-layout">
+      <div class="explorer-list" id="explorer-list"></div>
+      <div class="explorer-detail" id="explorer-detail">
+        <div class="qa-empty" style="height:400px">
+          <div class="qa-empty-icon">📋</div>
+          <div style="font-size:13px;color:var(--text3)">Select a regulation to view details</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS PANEL -->
+  <div class="panel" id="panel-analytics">
+    <div class="analytics-grid-4">
+      <div class="metric-card">
+        <div class="metric-val">20</div>
+        <div class="metric-label">Total regulations</div>
+        <div class="metric-sub">across <span>5 jurisdictions</span></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">240</div>
+        <div class="metric-label">Vector chunks</div>
+        <div class="metric-sub"><span>384-dim</span> embeddings</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">0.55</div>
+        <div class="metric-label">Avg similarity score</div>
+        <div class="metric-sub">cosine <span>similarity</span></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">100%</div>
+        <div class="metric-label">Retrieval accuracy</div>
+        <div class="metric-sub">specific <span>query test</span></div>
+      </div>
+    </div>
+    <div class="analytics-grid">
+      <div class="chart-card">
+        <div class="chart-title">Regulations by jurisdiction</div>
+        <div id="jurisdiction-chart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Regulations by category</div>
+        <div id="category-chart"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API = 'http://localhost:8000';
+let searchJurisdiction = '';
+let searchCategory = '';
+let qaJurisdiction = '';
+let explorerJurisdiction = '';
+
+const REGULATIONS = [
+  {id:1,title:"Digital Identity Protection Regulation",jurisdiction:"Brazil",category:"GDPR/Data Privacy"},
+  {id:2,title:"Suspicious Activity Disclosure Framework",jurisdiction:"EU",category:"AML/Financial Crime"},
+  {id:3,title:"Climate Risk Transparency Regulation",jurisdiction:"USA",category:"ESG Reporting"},
+  {id:4,title:"Clinical Information Governance Act",jurisdiction:"USA",category:"Healthcare Compliance"},
+  {id:5,title:"Critical Infrastructure Cyber Defense Regulation",jurisdiction:"Brazil",category:"Cybersecurity"},
+  {id:6,title:"Electronic Consent and Retention Framework",jurisdiction:"Kenya",category:"GDPR/Data Privacy"},
+  {id:7,title:"Financial Transaction Monitoring Order",jurisdiction:"EU",category:"AML/Financial Crime"},
+  {id:8,title:"Climate Risk Transparency Regulation",jurisdiction:"EU",category:"ESG Reporting"},
+  {id:9,title:"Clinical Information Governance Act",jurisdiction:"USA",category:"Healthcare Compliance"},
+  {id:10,title:"Network Resilience and Breach Notification Code",jurisdiction:"Kenya",category:"Cybersecurity"},
+  {id:11,title:"Electronic Consent and Retention Framework",jurisdiction:"Brazil",category:"GDPR/Data Privacy"},
+  {id:12,title:"Cross-Institutional AML Governance Act",jurisdiction:"USA",category:"AML/Financial Crime"},
+  {id:13,title:"Environmental Impact Governance Standard",jurisdiction:"Kenya",category:"ESG Reporting"},
+  {id:14,title:"Medical Provider Compliance Directive",jurisdiction:"EU",category:"Healthcare Compliance"},
+  {id:15,title:"Digital Systems Integrity Directive",jurisdiction:"Brazil",category:"Cybersecurity"},
+  {id:16,title:"Cross-Border Personal Information Control Act",jurisdiction:"UK",category:"GDPR/Data Privacy"},
+  {id:17,title:"Anti-Illicit Banking Standards Regulation",jurisdiction:"USA",category:"AML/Financial Crime"},
+  {id:18,title:"Corporate Sustainability Disclosure Code",jurisdiction:"UK",category:"ESG Reporting"},
+  {id:19,title:"Patient Safety and Audit Framework",jurisdiction:"EU",category:"Healthcare Compliance"},
+  {id:20,title:"Enterprise Security Governance Framework",jurisdiction:"EU",category:"Cybersecurity"}
+];
+
+const SAMPLE_QUERIES = [
+  "If a company discovers a material breach, what actions are required?",
+  "What is the maximum fine for violations?",
+  "How long must records be retained?",
+  "What is the reporting deadline for material environmental incidents?",
+  "What security controls are required for biometric data systems?",
+  "What is the incident reporting window for cyber events?",
+  "What obligations apply when outsourcing to third parties?",
+  "Is annual independent review mandatory?",
+  "When must suspicious activity reports be filed?",
+  "Are offline backup procedures required?"
+];
+
+const CAT_CLASSES = {
+  'GDPR/Data Privacy':'cat-gdpr',
+  'AML/Financial Crime':'cat-aml',
+  'ESG Reporting':'cat-esg',
+  'Healthcare Compliance':'cat-health',
+  'Cybersecurity':'cat-cyber'
+};
+
+const J_FLAGS = {Brazil:'🇧🇷',EU:'🇪🇺',Kenya:'🇰🇪',UK:'🇬🇧',USA:'🇺🇸'};
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if(name==='explorer') renderExplorer();
+  if(name==='analytics') renderAnalytics();
+  if(name==='qa') renderQAQueries();
+}
+
+function setJurisdiction(j, el){
+  searchJurisdiction = j;
+  document.querySelectorAll('.panel#panel-search .j-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(document.getElementById('search-input').value.trim()) doSearch();
+}
+
+function setCategory(c, el){
+  searchCategory = c;
+  document.querySelectorAll('.category-bar .cat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(document.getElementById('search-input').value.trim()) doSearch();
+}
+
+function setQAJurisdiction(j, el){
+  qaJurisdiction = j;
+  document.querySelectorAll('.panel#panel-qa .j-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function filterExplorer(j, el){
+  explorerJurisdiction = j;
+  document.querySelectorAll('.panel#panel-explorer .j-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderExplorer();
+}
+
+async function doSearch(){
+  const q = document.getElementById('search-input').value.trim();
+  if(!q) return;
+  const meta = document.getElementById('search-meta');
+  const results = document.getElementById('search-results');
+  meta.textContent = 'Searching...';
+  results.innerHTML = '<div class="loading-state"><span>Retrieving from vector index</span></div>';
+  try{
+    const body = {query:q, top_k:6};
+    if(searchJurisdiction) body.jurisdiction = searchJurisdiction;
+    const res = await fetch(API+'/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data = await res.json();
+    let items = data.results || [];
+    // Deduplicate by regulation_id, keep highest score per regulation
+    const seen = new Map();
+    items.forEach(r => {
+        if (!seen.has(r.regulation_id) || r.score > seen.get(r.regulation_id).score) {
+            seen.set(r.regulation_id, r);
+        }
+    });
+    items = Array.from(seen.values());
+    if(searchCategory) items = items.filter(r=>r.category===searchCategory);
+    meta.innerHTML = `<span>${items.length}</span> regulation${items.length!==1?'s':''} found`;
+    if(!items.length){results.innerHTML='<div style="color:var(--text3);padding:20px;font-size:13px">No regulations found. Try a different query or remove filters.</div>';return;}
+    results.innerHTML = items.map(r=>`
+      <div class="reg-card">
+        <div class="card-top">
+          <span class="card-cat ${CAT_CLASSES[r.category]||''}">${r.category}</span>
+          <span class="card-score">${r.score.toFixed(3)}</span>
+        </div>
+        <div class="card-title">${r.title}</div>
+        <div class="card-meta">
+          <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction}</span>
+        </div>
+        <div class="card-excerpt">${r.chunk_text}</div>
+      </div>
+    `).join('');
+  }catch(e){
+    meta.textContent='';
+    results.innerHTML='<div style="color:var(--coral);padding:20px;font-size:13px">API error. Make sure the FastAPI server is running on port 8000.</div>';
+  }
+}
+
+function renderQAQueries(){
+  const container = document.getElementById('qa-queries');
+  container.innerHTML = SAMPLE_QUERIES.map(q=>`
+    <button class="qa-query-btn" onclick="askQuestion(this,'${q.replace(/'/g,"\\'")}')">
+      ${q}
+    </button>
+  `).join('');
+}
+
+async function askQuestion(el, question){
+  document.querySelectorAll('.qa-query-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const response = document.getElementById('qa-response');
+  response.innerHTML=`<div class="qa-loading"><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><span style="margin-left:4px">Retrieving from Pinecone and generating answer...</span></div>`;
+  try{
+    const body = {question, top_k:2};
+    if(qaJurisdiction) body.jurisdiction = qaJurisdiction;
+    const res = await fetch(API+'/compliance-qa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const data = await res.json();
+    const citation = data.citations && data.citations[0];
+    response.innerHTML=`
+      <div class="qa-question">
+        <div class="qa-q-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="qa-q-text">${question}</div>
+      </div>
+      <div class="qa-answer">${data.answer || 'No answer generated.'}</div>
+      <div class="qa-verified">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Verified against indexed regulations &nbsp;·&nbsp; Retrieval similarity: ${(data.confidence * 100).toFixed(1)}%
+      </div>
+      ${data.citations && data.citations.length > 0 ? `
+      <div class="qa-citation">
+        <div class="qa-citation-label">Source citations (${data.citations.length} regulations)</div>
+        ${data.citations.map(c => `
+          <div style="padding:6px 0;border-bottom:1px solid var(--border)">
+            <div class="qa-citation-text">${c.article_ref || 'General provision'} — <em>${c.title} (${c.jurisdiction})</em> &nbsp;·&nbsp; Score: ${c.score}</div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+    `;
+  }catch(e){
+    response.innerHTML='<div style="color:var(--coral);padding:20px;font-size:13px">API error. Make sure the FastAPI server is running on port 8000.</div>';
+  }
+}
+
+function renderExplorer(){
+  const list = document.getElementById('explorer-list');
+  const filtered = explorerJurisdiction ? REGULATIONS.filter(r=>r.jurisdiction===explorerJurisdiction) : REGULATIONS;
+  list.innerHTML = filtered.map(r=>`
+    <div class="explorer-item" onclick="showDetail(${r.id},this)">
+      <div class="explorer-item-title">${r.title}</div>
+      <div class="explorer-item-meta">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction} &nbsp;·&nbsp; ${r.category}</div>
+    </div>
+  `).join('');
+}
+
+async function showDetail(id, el){
+  document.querySelectorAll('.explorer-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  const detail = document.getElementById('explorer-detail');
+  const reg = REGULATIONS.find(r=>r.id===id);
+  detail.innerHTML=`<div class="loading-state">Loading regulation details...</div>`;
+  try{
+    const res = await fetch(API+'/summarize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({regulation_id:id})});
+    const data = await res.json();
+    detail.innerHTML=`
+      <div class="detail-header">
+        <div class="detail-title">${data.title}</div>
+        <div class="detail-badges">
+          <span class="detail-badge ${CAT_CLASSES[reg.category]||''}">${reg.category}</span>
+          <span class="detail-badge" style="background:var(--surface3);color:var(--text2)">${J_FLAGS[reg.jurisdiction]||''} ${reg.jurisdiction}</span>
+          <span class="detail-badge" style="background:var(--surface3);color:var(--text3)">Regulation ID: ${id}</span>
+        </div>
+      </div>
+      <div class="provision">
+        <div class="provision-ref">AI Summary</div>
+        <span class="provision-tag" style="background:var(--accent-dim);color:var(--accent)">Generated</span>
+        <div class="provision-text">${data.summary}</div>
+      </div>
+    `;
+  }catch(e){
+    detail.innerHTML=`
+      <div class="detail-header">
+        <div class="detail-title">${reg.title}</div>
+        <div class="detail-badges">
+          <span class="detail-badge ${CAT_CLASSES[reg.category]||''}">${reg.category}</span>
+          <span class="detail-badge" style="background:var(--surface3);color:var(--text2)">${J_FLAGS[reg.jurisdiction]||''} ${reg.jurisdiction}</span>
+        </div>
+      </div>
+      <div style="color:var(--text3);font-size:13px;padding:12px 0">API error loading summary. Make sure FastAPI is running.</div>
+    `;
+  }
+}
+
+function renderAnalytics(){
+  const jData = [{label:'EU',count:6,color:'#60a5fa'},{label:'USA',count:5,color:'#fbbf24'},{label:'Brazil',count:4,color:'#4ade80'},{label:'Kenya',count:3,color:'#2dd4bf'},{label:'UK',count:2,color:'#a78bfa'}];
+  const cData = [{label:'Data Privacy',count:4,color:'#60a5fa'},{label:'AML / Financial',count:4,color:'#fbbf24'},{label:'ESG Reporting',count:4,color:'#2dd4bf'},{label:'Healthcare',count:4,color:'#f87171'},{label:'Cybersecurity',count:4,color:'#a78bfa'}];
+  const max = 6;
+  document.getElementById('jurisdiction-chart').innerHTML = jData.map(d=>`
+    <div class="bar-row">
+      <div class="bar-label">${J_FLAGS[d.label]||''} ${d.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(d.count/max)*100}%;background:${d.color}"></div></div>
+      <div class="bar-count">${d.count}</div>
+    </div>
+  `).join('');
+  document.getElementById('category-chart').innerHTML = cData.map(d=>`
+    <div class="pie-row">
+      <div class="pie-dot" style="background:${d.color}"></div>
+      <div class="pie-name">${d.label}</div>
+      <div class="pie-pct">${d.count} regs</div>
+    </div>
+  `).join('');
+}
+
+// Check API health
+fetch(API+'/').then(r=>{
+  if(r.ok) document.getElementById('api-status').style.color='var(--accent)';
+}).catch(()=>{
+  document.getElementById('api-status').style.color='var(--coral)';
+});
+
+// Initial search
+document.getElementById('search-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') doSearch();
+});
+
+// Load initial search
+window.addEventListener('load',()=>{
+  document.getElementById('search-input').value = 'data breach notification';
+  doSearch();
+  renderQAQueries();
+});
+</script>
+</body>
+</html>

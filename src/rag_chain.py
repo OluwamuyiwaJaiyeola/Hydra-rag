@@ -1,4 +1,5 @@
 import warnings
+import re
 warnings.filterwarnings("ignore")
 
 from sentence_transformers import SentenceTransformer
@@ -15,45 +16,57 @@ def get_pinecone_index():
     return pc.Index(PINECONE_INDEX_NAME)
 
 def retrieve_chunks(query: str, index, model: SentenceTransformer, top_k: int = 2) -> list:
-    query_vector = model.encode(query).tolist()
+    query_vector = model.encode(query, normalize_embeddings=True).tolist()
     results = index.query(vector=query_vector, top_k=top_k, include_metadata=True)
-    return results["matches"]
+    matches = results["matches"]
+    RELEVANCE_THRESHOLD = 0.35
+    filtered = [m for m in matches if m["score"] >= RELEVANCE_THRESHOLD]
+    if not filtered:
+        return []
+    return filtered
 
 def format_context(matches: list) -> str:
     context_parts = []
     for match in matches:
         meta = match["metadata"]
-        context_parts.append(
-            f"Regulation: {meta['title']}\n"
-            f"Jurisdiction: {meta['jurisdiction']}\n"
-            f"Content: {meta['chunk_text'][:300]}\n"
-            f"Source ID: regulation_{int(meta['regulation_id'])}"
-        )
-    return "\n---\n".join(context_parts)
+        article = meta.get("article_ref", "")
+        chunk = meta["chunk_text"][:400]
+        if article and article != "General provision":
+            context_parts.append(f"{article}: {chunk}")
+        else:
+            context_parts.append(chunk)
+    return "\n\n".join(context_parts)
 
 def build_prompt(context: str, question: str) -> str:
-    return f"""Answer using the regulations below. Cite the regulation title.
+    return f"""You are a compliance expert. Read the regulation text below and answer the question in one clear sentence. Cite the specific obligation.
 
-REGULATIONS:
-{context}
+Regulation text:
+{context[:600]}
 
-QUESTION:
-{question}
+Question: {question}
 
-ANSWER:"""
+Answer in one sentence:"""
 
 def load_local_llm():
     return pipeline(
         "text2text-generation",
         model="google/flan-t5-base",
-        max_new_tokens=128
+        max_new_tokens=256
     )
 
 def answer_compliance_question(question: str, llm_pipeline=None) -> dict:
     embedding_model = SentenceTransformer(HUGGINGFACE_MODEL)
     index = get_pinecone_index()
 
-    matches = retrieve_chunks(question, index, embedding_model, top_k=2)
+    matches = retrieve_chunks(question, index, embedding_model, top_k=5)
+
+    if not matches:
+        return {
+            "question": question,
+            "answer": "I cannot find relevant regulations to answer this question. The query may be outside the scope of indexed regulations.",
+            "sources": []
+        }
+
     context = format_context(matches)
     prompt_text = build_prompt(context, question)
 
@@ -68,7 +81,8 @@ def answer_compliance_question(question: str, llm_pipeline=None) -> dict:
             "regulation_id": int(m["metadata"]["regulation_id"]),
             "title": m["metadata"]["title"],
             "jurisdiction": m["metadata"]["jurisdiction"],
-            "score": round(m["score"], 4)
+            "score": round(m["score"], 4),
+            "article_ref": m["metadata"].get("article_ref", "General provision")
         }
         for m in matches
     ]

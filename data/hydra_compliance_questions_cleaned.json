@@ -1,0 +1,488 @@
+[
+  {
+    "query_id": 1,
+    "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+    "expected_answer": "Regulators may issue corrective orders, impose operational restrictions, apply enhanced monitoring, or impose monetary sanctions on entities that fail to meet remediation deadlines.",
+    "target_regulation_id": 1,
+    "category": "scenario",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "remediation_deadline"
+  },
+  {
+    "query_id": 2,
+    "query_text": "If a company discovers a material breach, what actions are required?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "target_regulation_id": 1,
+    "category": "scenario",
+    "answer_corrected": false,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 3,
+    "query_text": "How does this regulation balance enforcement with transitional compliance measures? In the context of EU?",
+    "expected_answer": "This regulation enters into force one hundred and twenty days after publication. Transitional compliance measures may be granted for entities demonstrating substantial implementation progress.",
+    "target_regulation_id": 2,
+    "category": "comparative",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "transitional"
+  },
+  {
+    "query_id": 4,
+    "query_text": "What authority receives mandatory breach notifications?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "target_regulation_id": 2,
+    "category": "factual",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 5,
+    "query_text": "What is the maximum fine described for violations?",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 3,
+    "category": "factual",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 6,
+    "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+    "expected_answer": "Regulators may issue corrective orders, impose operational restrictions, apply enhanced monitoring, or impose monetary sanctions on entities that fail to meet remediation deadlines.",
+    "target_regulation_id": 3,
+    "category": "scenario",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "remediation_deadline"
+  },
+  {
+    "query_id": 7,
+    "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+    "expected_answer": "Regulators may issue corrective orders, impose operational restrictions, apply enhanced monitoring, or impose monetary sanctions on entities that fail to meet remediation deadlines.",
+    "target_regulation_id": 4,
+    "category": "scenario",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "remediation_deadline"
+  },
+  {
+    "query_id": 8,
+    "query_text": "Is annual independent review mandatory under this regulation?",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 4,
+    "category": "binary",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 9,
+    "query_text": "What penalties may apply for repeated non-compliance?",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 5,
+    "category": "factual",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 10,
+    "query_text": "If a company discovers a material breach, what actions are required?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "target_regulation_id": 5,
+    "category": "scenario",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 11,
+    "query_text": "Is annual independent review mandatory under this regulation?",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 6,
+    "category": "binary",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 12,
+    "query_text": "How are sanctions under this regulation different from operational restrictions in similar frameworks? In the context of Kenya?",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 6,
+    "category": "comparative",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 13,
+    "query_text": "How are sanctions under this regulation different from operational restrictions in similar frameworks? In the context of EU?",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 7,
+    "category": "comparative",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 14,
+    "query_text": "Must entities provide records within ten business days when requested?",
+    "expected_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "target_regulation_id": 7,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "record_provision"
+  },
+  {
+    "query_id": 15,
+    "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 8,
+    "category": "scenario",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 16,
+    "query_text": "If a company discovers a material breach, what actions are required?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "target_regulation_id": 8,
+    "category": "scenario",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 17,
+    "query_text": "Did the latest version introduce stricter audit timelines? Summarize the expected operational impact.",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 9,
+    "category": "update",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 18,
+    "query_text": "Did the latest version introduce stricter audit timelines? Summarize the expected operational impact.",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 9,
+    "category": "update",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 19,
+    "query_text": "Is employee compliance training required?",
+    "expected_answer": "Yes. Hospitals and regulated entities must conduct semiannual compliance training for administrative and clinical personnel.",
+    "target_regulation_id": 10,
+    "category": "binary",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "employee_training"
+  },
+  {
+    "query_id": 20,
+    "query_text": "How are sanctions under this regulation different from operational restrictions in similar frameworks? In the context of Kenya?",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 10,
+    "category": "comparative",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 21,
+    "query_text": "Did the latest version introduce stricter audit timelines? Summarize the expected operational impact.",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 11,
+    "category": "update",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 22,
+    "query_text": "If a company discovers a material breach, what actions are required?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "target_regulation_id": 11,
+    "category": "scenario",
+    "answer_corrected": false,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 23,
+    "query_text": "Is annual independent review mandatory under this regulation?",
+    "expected_answer": "Yes. Annual independent reviews are mandatory. Material weaknesses must be remediated within ninety calendar days unless an extension is authorized.",
+    "target_regulation_id": 12,
+    "category": "binary",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "annual_review"
+  },
+  {
+    "query_id": 24,
+    "query_text": "If a healthcare operator stores biometric data, what controls are required?",
+    "expected_answer": "Clinical systems processing biometric information must implement multifactor authentication for all privileged accounts.",
+    "target_regulation_id": 12,
+    "category": "scenario",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "biometric"
+  },
+  {
+    "query_id": 25,
+    "query_text": "If a company discovers a material breach, what actions are required?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "target_regulation_id": 13,
+    "category": "scenario",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 26,
+    "query_text": "Can regulators impose operational restrictions for repeated violations?",
+    "expected_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "target_regulation_id": 13,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 27,
+    "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 14,
+    "category": "scenario",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 28,
+    "query_text": "How does this regulation treat third-party service providers compared to internal departments? In the context of EU?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 14,
+    "category": "comparative",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 29,
+    "query_text": "What distinguishes this regulation\u2019s incident reporting requirements from general industry practice? In the context of Brazil?",
+    "expected_answer": "Material cyber incidents affecting essential services must be reported within twenty-four hours of confirmation.",
+    "target_regulation_id": 15,
+    "category": "comparative",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "cyber_incident"
+  },
+  {
+    "query_id": 30,
+    "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 15,
+    "category": "scenario",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 31,
+    "query_text": "Can regulators impose operational restrictions for repeated violations?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "target_regulation_id": 16,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 32,
+    "query_text": "What updates were made to breach notification obligations? Summarize the expected operational impact.",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "target_regulation_id": 16,
+    "category": "update",
+    "answer_corrected": false,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 33,
+    "query_text": "Were any new monetary sanctions added in the recent revision? Summarize the expected operational impact.",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 17,
+    "category": "update",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 34,
+    "query_text": "Were any new monetary sanctions added in the recent revision? Summarize the expected operational impact.",
+    "expected_answer": "Administrative penalties for negligent processing may reach five percent of annual regional turnover or ten million compliance units. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "target_regulation_id": 17,
+    "category": "update",
+    "original_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "answer_corrected": true,
+    "detected_topic": "sanctions"
+  },
+  {
+    "query_id": 35,
+    "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 18,
+    "category": "scenario",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 36,
+    "query_text": "Can regulators impose operational restrictions for repeated violations?",
+    "expected_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "target_regulation_id": 18,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 37,
+    "query_text": "How does this regulation approach audit obligations compared to other jurisdictions? In the context of EU?",
+    "expected_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "target_regulation_id": 19,
+    "category": "comparative",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 38,
+    "query_text": "What is the reporting deadline for material incidents under this regulation?",
+    "expected_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "target_regulation_id": 19,
+    "category": "factual",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 39,
+    "query_text": "Are organizations permitted to transfer regulated information without safeguards?",
+    "expected_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "target_regulation_id": 20,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "transfer"
+  },
+  {
+    "query_id": 40,
+    "query_text": "How does this regulation balance enforcement with transitional compliance measures? In the context of EU?",
+    "expected_answer": "This regulation enters into force one hundred and twenty days after publication. Transitional compliance measures may be granted for entities demonstrating substantial implementation progress.",
+    "target_regulation_id": 20,
+    "category": "comparative",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "transitional"
+  },
+  {
+    "query_id": 41,
+    "query_text": "How does this regulation treat third-party service providers compared to internal departments?",
+    "expected_answer": "Entities engaging third-party service providers must ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "target_regulation_id": 3,
+    "category": "comparative",
+    "original_answer": "Material environmental incidents must be disclosed within fifteen calendar days.",
+    "answer_corrected": true,
+    "detected_topic": "outsourcing"
+  },
+  {
+    "query_id": 42,
+    "query_text": "How does this regulation balance enforcement with transitional compliance measures?",
+    "expected_answer": "This regulation enters into force one hundred and twenty days after publication. Transitional compliance measures may be granted for entities demonstrating substantial implementation progress.",
+    "target_regulation_id": 20,
+    "category": "comparative",
+    "original_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "answer_corrected": true,
+    "detected_topic": "transitional"
+  },
+  {
+    "query_id": 43,
+    "query_text": "What changed in the 2024 compliance guidance under this regulation?",
+    "expected_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "target_regulation_id": 9,
+    "category": "update",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 44,
+    "query_text": "What updates were made to breach notification obligations?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material data breach and maintain a documented incident response log.",
+    "target_regulation_id": 4,
+    "category": "update",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "breach_notification"
+  },
+  {
+    "query_id": 45,
+    "query_text": "How long must records be retained under the regulation?",
+    "expected_answer": "Financial institutions are required to retain customer identity records and transaction logs for a minimum of seven years.",
+    "target_regulation_id": 11,
+    "category": "factual",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "record_retention"
+  },
+  {
+    "query_id": 46,
+    "query_text": "Is employee compliance training required?",
+    "expected_answer": "Yes. Hospitals and regulated entities must conduct semiannual compliance training for administrative and clinical personnel.",
+    "target_regulation_id": 14,
+    "category": "binary",
+    "original_answer": "Clinical systems processing biometric data must implement multifactor authentication.",
+    "answer_corrected": true,
+    "detected_topic": "employee_training"
+  },
+  {
+    "query_id": 47,
+    "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+    "expected_answer": "Regulators may issue corrective orders, impose operational restrictions, apply enhanced monitoring, or impose monetary sanctions on entities that fail to meet remediation deadlines.",
+    "target_regulation_id": 1,
+    "category": "scenario",
+    "original_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "answer_corrected": true,
+    "detected_topic": "remediation_deadline"
+  },
+  {
+    "query_id": 48,
+    "query_text": "What changed in the 2024 compliance guidance under this regulation?",
+    "expected_answer": "Organizations must notify supervisory authorities within seventy-two hours of detecting a material breach.",
+    "target_regulation_id": 6,
+    "category": "update",
+    "answer_corrected": false,
+    "detected_topic": "unknown"
+  },
+  {
+    "query_id": 49,
+    "query_text": "Did the updated framework expand supervisory authority powers?",
+    "expected_answer": "Material cyber incidents must be reported within twenty-four hours of confirmation.",
+    "target_regulation_id": 10,
+    "category": "update",
+    "answer_corrected": false,
+    "detected_topic": "supervisory"
+  },
+  {
+    "query_id": 50,
+    "query_text": "Must entities provide records within ten business days when requested?",
+    "expected_answer": "Customer identity and transaction records must be retained for at least seven years.",
+    "target_regulation_id": 7,
+    "category": "binary",
+    "answer_corrected": false,
+    "detected_topic": "record_provision"
+  }
+]

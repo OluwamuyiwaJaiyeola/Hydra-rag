@@ -1,0 +1,142 @@
+[
+  {
+    "regulation_id": 1,
+    "title": "Digital Identity Protection Regulation (Brazil)",
+    "jurisdiction": "Brazil",
+    "category": "GDPR/Data Privacy",
+    "full_text": "Article 1.1. Organizations processing personal information shall maintain a lawful basis register identifying consent, contractual necessity, or statutory authorization for each processing activity.\n\nArticle 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.\n\nArticle 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.\n\nArticle 4.5. Entities transferring personal information outside the jurisdiction shall conduct transfer impact assessments and maintain encryption controls.\n\nArticle 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units."
+  },
+  {
+    "regulation_id": 2,
+    "title": "Suspicious Activity Disclosure Framework (EU)",
+    "jurisdiction": "EU",
+    "category": "AML/Financial Crime",
+    "full_text": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.\n\nSection 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.\n\nSection 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.\n\nSection 4.2. Automated monitoring systems shall be calibrated quarterly to identify structuring, sanctions evasion, and layered transfers.\n\nSection 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units."
+  },
+  {
+    "regulation_id": 3,
+    "title": "Climate Risk Transparency Regulation (USA)",
+    "jurisdiction": "USA",
+    "category": "ESG Reporting",
+    "full_text": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.\n\nClause 2.4. Carbon intensity calculations shall be measured using operational control methodology and documented estimation assumptions.\n\nClause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.\n\nClause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.\n\nClause 5.3. Failure to submit complete disclosures may result in trading restrictions and administrative sanctions."
+  },
+  {
+    "regulation_id": 4,
+    "title": "Clinical Information Governance Act (USA)",
+    "jurisdiction": "USA",
+    "category": "Healthcare Compliance",
+    "full_text": "Provision 1.3. Healthcare operators shall maintain patient treatment records in tamper-evident digital repositories.\n\nProvision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.\n\nProvision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.\n\nProvision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.\n\nProvision 5.6. Repeated non-compliance may result in accreditation suspension and monetary penalties."
+  },
+  {
+    "regulation_id": 5,
+    "title": "Critical Infrastructure Cyber Defense Regulation (Brazil)",
+    "jurisdiction": "Brazil",
+    "category": "Cybersecurity",
+    "full_text": "Rule 1.1. Operators of critical systems shall maintain continuous vulnerability assessment and remediation programs.\n\nRule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.\n\nRule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.\n\nRule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.\n\nRule 5.9. Regulators may impose corrective directives and fines for failure to implement reasonable security measures."
+  },
+  {
+    "regulation_id": 6,
+    "title": "Electronic Consent and Retention Framework (Kenya)",
+    "jurisdiction": "Kenya",
+    "category": "GDPR/Data Privacy",
+    "full_text": "Article 1.1. Organizations processing personal information shall maintain a lawful basis register identifying consent, contractual necessity, or statutory authorization for each processing activity.\n\nArticle 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.\n\nArticle 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.\n\nArticle 4.5. Entities transferring personal information outside the jurisdiction shall conduct transfer impact assessments and maintain encryption controls.\n\nArticle 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units."
+  },
+  {
+    "regulation_id": 7,
+    "title": "Financial Transaction Monitoring Order (EU)",
+    "jurisdiction": "EU",
+    "category": "AML/Financial Crime",
+    "full_text": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.\n\nSection 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.\n\nSection 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.\n\nSection 4.2. Automated monitoring systems shall be calibrated quarterly to identify structuring, sanctions evasion, and layered transfers.\n\nSection 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units."
+  },
+  {
+    "regulation_id": 8,
+    "title": "Climate Risk Transparency Regulation (EU)",
+    "jurisdiction": "EU",
+    "category": "ESG Reporting",
+    "full_text": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.\n\nClause 2.4. Carbon intensity calculations shall be measured using operational control methodology and documented estimation assumptions.\n\nClause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.\n\nClause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.\n\nClause 5.3. Failure to submit complete disclosures may result in trading restrictions and administrative sanctions."
+  },
+  {
+    "regulation_id": 9,
+    "title": "Clinical Information Governance Act (USA)",
+    "jurisdiction": "USA",
+    "category": "Healthcare Compliance",
+    "full_text": "Provision 1.3. Healthcare operators shall maintain patient treatment records in tamper-evident digital repositories.\n\nProvision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.\n\nProvision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.\n\nProvision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.\n\nProvision 5.6. Repeated non-compliance may result in accreditation suspension and monetary penalties."
+  },
+  {
+    "regulation_id": 10,
+    "title": "Network Resilience and Breach Notification Code (Kenya)",
+    "jurisdiction": "Kenya",
+    "category": "Cybersecurity",
+    "full_text": "Rule 1.1. Operators of critical systems shall maintain continuous vulnerability assessment and remediation programs.\n\nRule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.\n\nRule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.\n\nRule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.\n\nRule 5.9. Regulators may impose corrective directives and fines for failure to implement reasonable security measures."
+  },
+  {
+    "regulation_id": 11,
+    "title": "Electronic Consent and Retention Framework (Brazil)",
+    "jurisdiction": "Brazil",
+    "category": "GDPR/Data Privacy",
+    "full_text": "Article 1.1. Organizations processing personal information shall maintain a lawful basis register identifying consent, contractual necessity, or statutory authorization for each processing activity.\n\nArticle 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.\n\nArticle 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.\n\nArticle 4.5. Entities transferring personal information outside the jurisdiction shall conduct transfer impact assessments and maintain encryption controls.\n\nArticle 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units."
+  },
+  {
+    "regulation_id": 12,
+    "title": "Cross-Institutional AML Governance Act (USA)",
+    "jurisdiction": "USA",
+    "category": "AML/Financial Crime",
+    "full_text": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.\n\nSection 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.\n\nSection 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.\n\nSection 4.2. Automated monitoring systems shall be calibrated quarterly to identify structuring, sanctions evasion, and layered transfers.\n\nSection 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units."
+  },
+  {
+    "regulation_id": 13,
+    "title": "Environmental Impact Governance Standard (Kenya)",
+    "jurisdiction": "Kenya",
+    "category": "ESG Reporting",
+    "full_text": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.\n\nClause 2.4. Carbon intensity calculations shall be measured using operational control methodology and documented estimation assumptions.\n\nClause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.\n\nClause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.\n\nClause 5.3. Failure to submit complete disclosures may result in trading restrictions and administrative sanctions."
+  },
+  {
+    "regulation_id": 14,
+    "title": "Medical Provider Compliance Directive (EU)",
+    "jurisdiction": "EU",
+    "category": "Healthcare Compliance",
+    "full_text": "Provision 1.3. Healthcare operators shall maintain patient treatment records in tamper-evident digital repositories.\n\nProvision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.\n\nProvision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.\n\nProvision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.\n\nProvision 5.6. Repeated non-compliance may result in accreditation suspension and monetary penalties."
+  },
+  {
+    "regulation_id": 15,
+    "title": "Digital Systems Integrity Directive (Brazil)",
+    "jurisdiction": "Brazil",
+    "category": "Cybersecurity",
+    "full_text": "Rule 1.1. Operators of critical systems shall maintain continuous vulnerability assessment and remediation programs.\n\nRule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.\n\nRule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.\n\nRule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.\n\nRule 5.9. Regulators may impose corrective directives and fines for failure to implement reasonable security measures."
+  },
+  {
+    "regulation_id": 16,
+    "title": "Cross-Border Personal Information Control Act (UK)",
+    "jurisdiction": "UK",
+    "category": "GDPR/Data Privacy",
+    "full_text": "Article 1.1. Organizations processing personal information shall maintain a lawful basis register identifying consent, contractual necessity, or statutory authorization for each processing activity.\n\nArticle 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.\n\nArticle 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.\n\nArticle 4.5. Entities transferring personal information outside the jurisdiction shall conduct transfer impact assessments and maintain encryption controls.\n\nArticle 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units."
+  },
+  {
+    "regulation_id": 17,
+    "title": "Anti-Illicit Banking Standards Regulation (USA)",
+    "jurisdiction": "USA",
+    "category": "AML/Financial Crime",
+    "full_text": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.\n\nSection 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.\n\nSection 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.\n\nSection 4.2. Automated monitoring systems shall be calibrated quarterly to identify structuring, sanctions evasion, and layered transfers.\n\nSection 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units."
+  },
+  {
+    "regulation_id": 18,
+    "title": "Corporate Sustainability Disclosure Code (UK)",
+    "jurisdiction": "UK",
+    "category": "ESG Reporting",
+    "full_text": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.\n\nClause 2.4. Carbon intensity calculations shall be measured using operational control methodology and documented estimation assumptions.\n\nClause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.\n\nClause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.\n\nClause 5.3. Failure to submit complete disclosures may result in trading restrictions and administrative sanctions."
+  },
+  {
+    "regulation_id": 19,
+    "title": "Patient Safety and Audit Framework (EU)",
+    "jurisdiction": "EU",
+    "category": "Healthcare Compliance",
+    "full_text": "Provision 1.3. Healthcare operators shall maintain patient treatment records in tamper-evident digital repositories.\n\nProvision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.\n\nProvision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.\n\nProvision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.\n\nProvision 5.6. Repeated non-compliance may result in accreditation suspension and monetary penalties."
+  },
+  {
+    "regulation_id": 20,
+    "title": "Enterprise Security Governance Framework (EU)",
+    "jurisdiction": "EU",
+    "category": "Cybersecurity",
+    "full_text": "Rule 1.1. Operators of critical systems shall maintain continuous vulnerability assessment and remediation programs.\n\nRule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.\n\nRule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.\n\nRule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.\n\nRule 5.9. Regulators may impose corrective directives and fines for failure to implement reasonable security measures."
+  }
+]
