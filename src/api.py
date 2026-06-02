@@ -134,20 +134,18 @@ def compliance_qa(request: QueryRequest):
         if request.jurisdiction:
             filter_dict = {"jurisdiction": {"$eq": request.jurisdiction}}
 
-        query_vector = embedding_model.encode(request.question).tolist()
-        raw_results = index.query(
-            vector=query_vector,
-            top_k=request.top_k,
-            include_metadata=True,
-            filter=filter_dict
+        # Use retrieve_chunks which includes deduplication
+        matches = retrieve_chunks(
+            query=request.question,
+            index=index,
+            model=embedding_model,
+            top_k=request.top_k or 5
         )
-        matches = raw_results["matches"]
 
         if not matches or matches[0]["score"] < 0.3:
             elapsed = round(time.time() - start_time, 3)
             logging.info(
-                f"query='{request.question}' "
-                f"jurisdiction='{request.jurisdiction}' "
+                f"query='{request.question}' jurisdiction='{request.jurisdiction}' "
                 f"top_score=0 result=no_match elapsed={elapsed}s"
             )
             return QueryResponse(
@@ -161,7 +159,7 @@ def compliance_qa(request: QueryRequest):
         confidence = round(matches[0]["score"], 4)
         context = format_context(matches)
 
-        prompt = f"""You are a compliance expert. Read the regulation text and answer the question in one clear sentence.
+        prompt = f"""You are a regulatory compliance expert. Read the regulation text and answer the question in one clear sentence. Always cite the specific article or provision.
 
 REGULATIONS:
 {context}
@@ -174,7 +172,10 @@ ANSWER:"""
         try:
             llm_result = remote_llm_client.chat_completion(
                 messages=[
-                    {"role": "system", "content": "You are a regulatory compliance expert. Answer using only the provided regulation text. Cite the specific article."},
+                    {
+                        "role": "system",
+                        "content": "You are a regulatory compliance expert. Answer using only the provided regulation text. Cite the specific article."
+                    },
                     {"role": "user", "content": prompt}
                 ],
                 model=LLM_MODEL,
@@ -191,15 +192,15 @@ ANSWER:"""
                 title=m["metadata"]["title"],
                 jurisdiction=m["metadata"]["jurisdiction"],
                 score=round(m["score"], 4),
-                article_ref=m["metadata"].get("article_ref", "General provision")
+                article_ref=m["metadata"].get("article_ref", "General provision"),
+                chunk_text=m["metadata"].get("chunk_text", "")
             )
             for m in matches
         ]
 
         elapsed = round(time.time() - start_time, 3)
         logging.info(
-            f"query='{request.question}' "
-            f"jurisdiction='{request.jurisdiction}' "
+            f"query='{request.question}' jurisdiction='{request.jurisdiction}' "
             f"top_score={confidence} "
             f"regulation_id={int(matches[0]['metadata']['regulation_id'])} "
             f"elapsed={elapsed}s"
@@ -216,49 +217,6 @@ ANSWER:"""
     except Exception as e:
         logging.error(f"query='{request.question}' error='{str(e)}'")
         raise HTTPException(status_code=500, detail=str(e))
-
-
-# Endpoint 2: Semantic Search
-@app.post("/search", response_model=SearchResponse)
-def semantic_search(request: SearchRequest):
-    if not request.query.strip():
-        raise HTTPException(status_code=400, detail="Query cannot be empty.")
-
-    try:
-        filter_dict = None
-        if request.jurisdiction:
-            filter_dict = {"jurisdiction": {"$eq": request.jurisdiction}}
-
-        query_vector = embedding_model.encode(request.query).tolist()
-        raw_results = index.query(
-            vector=query_vector,
-            top_k=request.top_k,
-            include_metadata=True,
-            filter=filter_dict
-        )
-        matches = raw_results["matches"]
-
-        results = [
-            SearchResult(
-                regulation_id=int(m["metadata"]["regulation_id"]),
-                title=m["metadata"]["title"],
-                jurisdiction=m["metadata"]["jurisdiction"],
-                category=m["metadata"]["category"],
-                chunk_text=m["metadata"]["chunk_text"],
-                score=round(m["score"], 4)
-            )
-            for m in matches
-        ]
-
-        return SearchResponse(
-            query=request.query,
-            results=results,
-            total_found=len(results)
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 
 # Endpoint 3: Regulation Summarization
 @app.post("/summarize", response_model=SummarizeResponse)
