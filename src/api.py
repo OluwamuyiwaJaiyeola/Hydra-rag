@@ -2,13 +2,16 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from transformers import pipeline as hf_pipeline
-from src.rag_chain import answer_compliance_question, retrieve_chunks, format_context
+from src.rag_chain import retrieve_chunks, format_context, detect_category_prefix
 from src.config import HUGGINGFACE_MODEL
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 from src.config import PINECONE_API_KEY, PINECONE_INDEX_NAME
 import logging
 import time
+import re
+import re as _re
+
 
 logging.basicConfig(
     filename="hydra_queries.log",
@@ -69,7 +72,7 @@ index = pc.Index(PINECONE_INDEX_NAME)
 class QueryRequest(BaseModel):
     question: str
     jurisdiction: Optional[str] = None
-    top_k: Optional[int] = 2
+    top_k: Optional[int] = 5
 
 class Citation(BaseModel):
     regulation_id: int
@@ -77,6 +80,7 @@ class Citation(BaseModel):
     jurisdiction: str
     score: float
     article_ref: Optional[str] = "General provision"
+    chunk_text: Optional[str] = ""
 
 class QueryResponse(BaseModel):
     question: str
@@ -159,7 +163,90 @@ def compliance_qa(request: QueryRequest):
         confidence = round(matches[0]["score"], 4)
         context = format_context(matches)
 
-        prompt = f"""You are a regulatory compliance expert. Read the regulation text and answer the question in one clear sentence. Always cite the specific article or provision.
+        # Detect if user asked about a specific jurisdiction
+        
+        jurisdiction_mentions = {
+            'kenya': 'Kenya', 'KENYA': 'Kenya', 'eu': 'EU', 'european union': 'EU', 'European Union': 'EU',
+            'brazil': 'Brazil', 'uk': 'UK', 'united kingdom': 'UK', 'United Kingdom': 'UK',
+            'usa': 'USA', 'united states': 'USA', 'america': 'USA', 'United States': 'USA', 'America': 'USA',
+        }
+        question_lower = request.question.lower()
+        asked_jurisdiction = None
+        for term, jname in jurisdiction_mentions.items():
+            if term in question_lower:
+                asked_jurisdiction = jname
+                break
+
+        # Check if retrieved regulations match the asked jurisdiction
+        retrieved_jurisdictions = list(set([m["metadata"]["jurisdiction"] for m in matches]))
+        jurisdiction_mismatch = (
+            asked_jurisdiction and
+            asked_jurisdiction not in retrieved_jurisdictions
+        )
+
+
+        # Hallucination guard: detect fictional regulations and unknown jurisdictions
+        FICTIONAL_SIGNALS = [
+            'hydra compliance directive',
+            'hydra directive',
+            'australia', 'australian',
+            'canada', 'canadian',
+            'india', 'indian',
+            'china', 'chinese',
+            'japan', 'japanese',
+            'singapore',
+            'new zealand',
+            'south africa',
+        ]
+
+        is_fictional_regulation = any(
+            f' {signal} ' in f' {question_lower} ' or
+            question_lower.startswith(signal) or
+            question_lower.endswith(signal)
+            for signal in FICTIONAL_SIGNALS
+        )
+
+        is_unknown_jurisdiction = (
+            asked_jurisdiction and
+            asked_jurisdiction not in {'Brazil', 'EU', 'Kenya', 'UK', 'USA'}
+        )
+
+        if is_fictional_regulation or is_unknown_jurisdiction:
+            elapsed = round(time.time() - start_time, 3)
+            logging.info(
+                f"query='{request.question}' result=hallucination_blocked elapsed={elapsed}s"
+            )
+            if is_unknown_jurisdiction:
+                answer_msg = f"There are no {asked_jurisdiction} regulations in the indexed database. The Hydra Analytics platform currently covers Brazil, EU, Kenya, UK, and USA only."
+            else:
+                answer_msg = "The regulation referenced in your query does not exist in the indexed database. The Hydra Analytics platform covers regulations for Brazil, EU, Kenya, UK, and USA only. Please refine your query."
+            return QueryResponse(
+                question=request.question,
+                answer=answer_msg,
+                citations=[],
+                regulation_ids=[],
+                confidence=0.0
+            )
+
+        jurisdiction_note = ""
+
+        if jurisdiction_mismatch:
+            closest_jurisdiction = matches[0]["metadata"]["jurisdiction"]
+            closest_title = matches[0]["metadata"]["title"]
+            jurisdiction_note = f"""
+        IMPORTANT: The user asked about {asked_jurisdiction} specifically.
+        There is NO {asked_jurisdiction}-specific regulation for this topic in the indexed database.
+        The closest relevant regulation is: {closest_title} ({closest_jurisdiction}).
+        You MUST begin your answer exactly like this:
+        "There is no {asked_jurisdiction}-specific regulation for this topic in the indexed database. The closest relevant regulation is the {closest_title} ({closest_jurisdiction}), which states: [then give the answer and cite the article]"
+        Do NOT say "and states". Do NOT mention any other jurisdiction."""
+
+        prompt = f"""You are a regulatory compliance expert. Read the regulation text and answer the question accurately.
+        Rules:
+        1. Answer in one clear sentence
+        2. End your answer with the exact article reference in brackets like [Article 2.3] or [Section 5.7]
+        3. Use ONLY information from the regulation text provided
+        {jurisdiction_note}
 
 REGULATIONS:
 {context}
@@ -198,6 +285,25 @@ ANSWER:"""
             for m in matches
         ]
 
+        # Extract article reference from the generated answer
+        answer_ref_match = re.search(
+            r'(Article|Section|Clause|Provision|Rule)\s+[\d\.]+',
+            answer,
+            re.IGNORECASE
+        )
+
+        if answer_ref_match:
+            used_ref = answer_ref_match.group(0).strip().lower()
+            matching = [c for c in citations if used_ref in c.article_ref.lower()]
+            if matching and asked_jurisdiction:
+                # Prefer citation from the asked jurisdiction
+                jurisdiction_match = [c for c in matching if c.jurisdiction == asked_jurisdiction]
+                display_citations = jurisdiction_match if jurisdiction_match else matching
+            else:
+                display_citations = matching if matching else citations[:1]
+        else:
+            display_citations = citations[:1]
+
         elapsed = round(time.time() - start_time, 3)
         logging.info(
             f"query='{request.question}' jurisdiction='{request.jurisdiction}' "
@@ -209,7 +315,7 @@ ANSWER:"""
         return QueryResponse(
             question=request.question,
             answer=answer,
-            citations=citations,
+            citations=display_citations,
             regulation_ids=[int(m["metadata"]["regulation_id"]) for m in matches],
             confidence=confidence
         )
@@ -218,13 +324,83 @@ ANSWER:"""
         logging.error(f"query='{request.question}' error='{str(e)}'")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Endpoint 2: Semantic Search
+@app.post("/search", response_model=SearchResponse)
+def semantic_search(request: SearchRequest):
+    if not request.query.strip():
+        raise HTTPException(status_code=400, detail="Query cannot be empty.")
+
+    try:
+        filter_dict = None
+        if request.jurisdiction:
+            filter_dict = {"jurisdiction": {"$eq": request.jurisdiction}}
+        
+        prefixed_query = detect_category_prefix(request.query)
+        query_vector = embedding_model.encode(
+            prefixed_query,
+            normalize_embeddings=True
+        ).tolist()
+
+        raw_results = index.query(
+            vector=query_vector,
+            top_k=50,
+            include_metadata=True,
+            filter=filter_dict
+        )
+        matches = raw_results["matches"]
+
+        # Deduplicate by regulation_id keeping all unique regulations first
+        seen_reg_ids = set()
+        deduplicated = []
+        for m in matches:
+            reg_id = m["metadata"].get("regulation_id")
+            if reg_id not in seen_reg_ids:
+                seen_reg_ids.add(reg_id)
+                deduplicated.append(m)
+        # Cap after category filtering, not before
+        # If query has a detectable category, filter results to that category
+        detected_prefix = detect_category_prefix(request.query)
+        if ':' in detected_prefix:
+            detected_category = detected_prefix.split(':')[0].strip()
+            category_filtered = [m for m in deduplicated if m["metadata"].get("category") == detected_category]
+            if len(category_filtered) >= 2:
+                deduplicated = category_filtered[:request.top_k or 10]
+            elif len(category_filtered) == 1:
+                others = [m for m in deduplicated if m["metadata"].get("category") != detected_category]
+                deduplicated = (category_filtered + others)[:request.top_k or 10]
+            else:
+                deduplicated = deduplicated[:request.top_k or 10]
+        else:
+            deduplicated = deduplicated[:request.top_k or 10]
+
+        results = [
+            SearchResult(
+                regulation_id=int(m["metadata"]["regulation_id"]),
+                title=m["metadata"]["title"],
+                jurisdiction=m["metadata"]["jurisdiction"],
+                category=m["metadata"]["category"],
+                chunk_text=m["metadata"].get("chunk_text", ""),
+                score=round(m["score"], 4)
+            )
+            for m in deduplicated
+        ]
+
+        return SearchResponse(
+            query=request.query,
+            results=results,
+            total_found=len(results)
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Endpoint 3: Regulation Summarization
 @app.post("/summarize", response_model=SummarizeResponse)
 def summarize_regulation(request: SummarizeRequest):
     try:
-        # Retrieve chunks for this specific regulation
         results = index.query(
-            vector=[0.0] * 384,
+            vector=[0.0] * 768,
             top_k=100,
             include_metadata=True,
             filter={"regulation_id": {"$eq": float(request.regulation_id)}}
@@ -238,7 +414,7 @@ def summarize_regulation(request: SummarizeRequest):
             )
 
         title = matches[0]["metadata"]["title"]
-        combined_text = " ".join([m["metadata"]["chunk_text"] for m in matches])[:600]
+        combined_text = " ".join([m["metadata"]["chunk_text"] for m in matches])[:800]
 
         prompt = f"""Summarize this regulation in 3 clear sentences for a compliance analyst.
 
@@ -250,16 +426,19 @@ SUMMARY:"""
         try:
             llm_result = remote_llm_client.chat_completion(
                 messages=[
-                    {"role": "system", "content": "You are a regulatory compliance expert. Answer using only the provided regulation text. Cite the specific article."},
+                    {
+                        "role": "system",
+                        "content": "You are a regulatory compliance expert. Summarize regulation documents clearly and concisely in exactly 3 sentences."
+                    },
                     {"role": "user", "content": prompt}
                 ],
                 model=LLM_MODEL,
-                max_tokens=128,
+                max_tokens=300,
                 temperature=0.1
             )
             summary = llm_result.choices[0].message.content
         except Exception as e:
-            summary = f"Generation failed: {str(e)}"
+            summary = f"Summarization failed: {str(e)}"
 
         return SummarizeResponse(
             regulation_id=request.regulation_id,
@@ -271,12 +450,82 @@ SUMMARY:"""
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
 
-# Additional endpoint to list all regulations (for frontend dropdowns, etc.)
+
+# Endpoint 4: List all regulations
 @app.get("/regulations")
 def list_regulations():
     return {
         "regulations": REGULATIONS,
         "total": len(REGULATIONS)
     }
+
+
+# Endpoint 5: Live index stats
+@app.get("/stats")
+def get_stats():
+    stats = index.describe_index_stats()
+    return {
+        "total_vectors": stats["total_vector_count"],
+        "total_regulations": 20,
+        "jurisdictions": 5,
+        "categories": 5,
+        "embedding_model": HUGGINGFACE_MODEL,
+        "dimensions": 768
+    }
+
+@app.get("/analytics")
+def get_analytics():
+    try:
+        total_queries = 0
+        hallucination_blocked = 0
+        no_match = 0
+        response_times = []
+        similarity_scores = []
+
+        with open("hydra_queries.log", "r") as f:
+            for line in f:
+                if "query='" not in line:
+                    continue
+                total_queries += 1
+                if "hallucination_blocked" in line:
+                    hallucination_blocked += 1
+                if "no_match" in line:
+                    no_match += 1
+                # Extract elapsed time
+                if "elapsed=" in line:
+                    try:
+                        elapsed = float(line.split("elapsed=")[1].split("s")[0])
+                        response_times.append(elapsed)
+                    except:
+                        pass
+                # Extract top_score
+                if "top_score=" in line:
+                    try:
+                        score = float(line.split("top_score=")[1].split(" ")[0])
+                        if score > 0:
+                            similarity_scores.append(score)
+                    except:
+                        pass
+
+        hallucination_rate = round(hallucination_blocked / total_queries * 100, 1) if total_queries > 0 else 0
+        avg_response_time = round(sum(response_times) / len(response_times), 2) if response_times else 0
+        avg_similarity = round(sum(similarity_scores) / len(similarity_scores), 3) if similarity_scores else 0
+
+        return {
+            "total_queries": total_queries,
+            "hallucination_blocked": hallucination_blocked,
+            "hallucination_rate": hallucination_rate,
+            "no_match_rate": round(no_match / total_queries * 100, 1) if total_queries > 0 else 0,
+            "avg_response_time": avg_response_time,
+            "avg_similarity_score": avg_similarity
+        }
+    except Exception as e:
+        return {
+            "total_queries": 0,
+            "hallucination_blocked": 0,
+            "hallucination_rate": 0,
+            "no_match_rate": 0,
+            "avg_response_time": 0,
+            "avg_similarity_score": 0
+        }

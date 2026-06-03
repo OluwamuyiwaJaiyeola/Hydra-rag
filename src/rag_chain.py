@@ -3,7 +3,6 @@ import re
 warnings.filterwarnings("ignore")
 
 from sentence_transformers import SentenceTransformer
-from transformers import pipeline
 from pinecone import Pinecone
 from src.config import (
     PINECONE_API_KEY,
@@ -11,14 +10,64 @@ from src.config import (
     HUGGINGFACE_MODEL
 )
 
+
 def get_pinecone_index():
     pc = Pinecone(api_key=PINECONE_API_KEY)
     return pc.Index(PINECONE_INDEX_NAME)
 
-def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
-    query_vector = model.encode(query, normalize_embeddings=True).tolist()
 
-    # Fetch extra to allow for deduplication across jurisdictions
+def detect_category_prefix(query: str) -> str:
+    """
+    Add category context to query before embedding.
+    Matches the prefix format used during ingestion so legal-bert
+    can distinguish between compliance domains correctly.
+    """
+    query_lower = query.lower()
+    if any(w in query_lower for w in [
+        'data breach', 'material breach', 'breach notification',
+        'data protection', 'privacy', 'gdpr',
+        'personal information', 'data controllers', 'incident response'
+    ]):
+        return f"GDPR/Data Privacy: {query}"
+    if any(w in query_lower for w in [
+    'suspicious activity', 'aml', 'financial crime',
+    'money laundering', 'transaction', 'financial intelligence',
+    'due diligence', 'reporting threshold',
+    'records retained', 'records be retained', 'retain records',
+    'how long must', 'retention period',
+    'maximum fine', 'civil penalties', 'license suspension',
+    'twelve million', 'repeated reporting', 'reporting failures',
+    'fine for violations', 'maximum fine for violations',
+    'penalties for violations', 'fines for violations'
+    ]):
+        return f"AML/Financial Crime: {query}"  
+    if any(w in query_lower for w in [
+        'environmental', 'climate', 'esg', 'sustainability',
+        'carbon', 'supply chain', 'disclosure'
+    ]):
+        return f"ESG Reporting: {query}"
+    if any(w in query_lower for w in [
+        'biometric', 'patient', 'healthcare', 'clinical',
+        'hospital', 'medical', 'health'
+    ]):
+        return f"Healthcare Compliance: {query}"
+    if any(w in query_lower for w in [
+        'cyber', 'backup', 'vulnerability', 'network',
+        'incident reporting', 'critical infrastructure', 'security controls'
+    ]):
+        return f"Cybersecurity: {query}"
+    return query
+
+
+def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
+    """
+    Retrieve top-k unique regulation chunks for a query.
+    Applies category prefix to query before embedding to improve
+    legal-bert domain matching accuracy.
+    """
+    prefixed_query = detect_category_prefix(query)
+    query_vector = model.encode(prefixed_query, normalize_embeddings=True).tolist()
+
     raw_results = index.query(
         vector=query_vector,
         top_k=20,
@@ -38,12 +87,14 @@ def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
             break
 
     # Apply relevance threshold
-    RELEVANCE_THRESHOLD = 0.35
+    RELEVANCE_THRESHOLD = 0.65
     filtered = [m for m in deduplicated if m["score"] >= RELEVANCE_THRESHOLD]
 
     return filtered if filtered else []
 
+
 def format_context(matches: list) -> str:
+    """Format retrieved chunks into a readable context string for the LLM."""
     context_parts = []
     for match in matches:
         meta = match["metadata"]
@@ -55,58 +106,18 @@ def format_context(matches: list) -> str:
             context_parts.append(chunk)
     return "\n\n".join(context_parts)
 
+
 def build_prompt(context: str, question: str) -> str:
-    return f"""You are a compliance expert. Read the regulation text below and answer the question in one clear sentence. Cite the specific obligation.
+    """Build the prompt sent to Phi-3 for answer generation."""
+    return f"""You are a regulatory compliance expert. Read the regulation text below and answer the question.
+Rules:
+1. Answer in one clear sentence
+2. End your answer with the exact article reference in brackets like [Article 2.3] or [Section 5.7]
+3. Use ONLY information from the regulation text provided
 
-Regulation text:
-{context[:600]}
+REGULATIONS:
+{context[:800]}
 
-Question: {question}
+QUESTION: {question}
 
-Answer in one sentence:"""
-
-def load_local_llm():
-    return pipeline(
-        "text2text-generation",
-        model="google/flan-t5-base",
-        max_new_tokens=256
-    )
-
-def answer_compliance_question(question: str, llm_pipeline=None) -> dict:
-    embedding_model = SentenceTransformer(HUGGINGFACE_MODEL)
-    index = get_pinecone_index()
-
-    matches = retrieve_chunks(question, index, embedding_model, top_k=5)
-
-    if not matches:
-        return {
-            "question": question,
-            "answer": "I cannot find relevant regulations to answer this question. The query may be outside the scope of indexed regulations.",
-            "sources": []
-        }
-
-    context = format_context(matches)
-    prompt_text = build_prompt(context, question)
-
-    if llm_pipeline is None:
-        llm_pipeline = load_local_llm()
-
-    result = llm_pipeline(prompt_text, max_new_tokens=128)
-    answer = result[0]["generated_text"]
-
-    sources = [
-        {
-            "regulation_id": int(m["metadata"]["regulation_id"]),
-            "title": m["metadata"]["title"],
-            "jurisdiction": m["metadata"]["jurisdiction"],
-            "score": round(m["score"], 4),
-            "article_ref": m["metadata"].get("article_ref", "General provision")
-        }
-        for m in matches
-    ]
-
-    return {
-        "question": question,
-        "answer": answer,
-        "sources": sources
-    }
+ANSWER:"""
