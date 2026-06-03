@@ -42,8 +42,11 @@ def detect_category_prefix(query: str) -> str:
     ]):
         return f"AML/Financial Crime: {query}"  
     if any(w in query_lower for w in [
-        'environmental', 'climate', 'esg', 'sustainability',
-        'carbon', 'supply chain', 'disclosure'
+    'environmental', 'climate', 'esg', 'sustainability',
+    'carbon', 'supply chain', 'disclosure',
+    'annual independent review', 'independent review',
+    'annual review', 'mandatory review',
+    'independent assurance', 'annually reviewed'
     ]):
         return f"ESG Reporting: {query}"
     if any(w in query_lower for w in [

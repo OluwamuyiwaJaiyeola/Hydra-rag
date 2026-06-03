@@ -163,6 +163,14 @@ def compliance_qa(request: QueryRequest):
             )
 
         confidence = round(matches[0]["score"], 4)
+
+        detected = detect_category_prefix(request.question)
+        if ':' in detected:
+            cat = detected.split(':')[0].strip()
+            cat_matches = [m for m in matches if m['metadata'].get('category') == cat]
+            if len(cat_matches) >= 2:  # Only filter if we have enough category matches
+                matches = cat_matches
+
         context = format_context(matches)
 
         # Detect if user asked about a specific jurisdiction
@@ -462,6 +470,22 @@ def list_regulations():
         "total": len(REGULATIONS)
     }
 
+
+@app.get("/compliance-questions")
+def get_compliance_questions():
+    try:
+        with open("data/hydra_compliance_questions_cleaned.json") as f:
+            questions = json.load(f)
+        seen = set()
+        unique = []
+        for q in questions:
+            if q["query_text"] not in seen:
+                seen.add(q["query_text"])
+                unique.append(q["query_text"])
+        return {"questions": unique, "total": len(unique)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 
 # Endpoint 5: Live index stats
 @app.get("/stats")

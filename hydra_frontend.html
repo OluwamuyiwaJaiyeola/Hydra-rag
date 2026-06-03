@@ -256,7 +256,13 @@ body{min-height:100vh;display:flex;flex-direction:column}
     </div>
     <div class="qa-layout">
       <div>
-        <div class="qa-section-label">Sample compliance queries</div>
+        <div class="qa-section-label">Compliance queries</div>
+        <select id="qa-dropdown"
+          style="width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px;cursor:pointer"
+          onchange="if(this.value){ const btn=document.createElement('button'); askQuestion(btn, this.value); this.value=''; }">
+          <option value="">Select a compliance query...</option>
+        </select>
+        <div class="qa-section-label" style="margin-top:4px">Quick access</div>
         <div class="qa-queries" id="qa-queries"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
@@ -384,7 +390,7 @@ const SAMPLE_QUERIES = [
   "What security controls are required for biometric data systems?",
   "What is the incident reporting window for cyber events?",
   "What obligations apply when outsourcing to third parties?",
-  "Is annual independent review mandatory?",
+  "Is annual independent sustainability disclosure review mandatory?",
   "When must suspicious activity reports be filed?",
   "Are offline backup procedures required?"
 ];
@@ -474,7 +480,28 @@ async function doSearch(){
   }
 }
 
-function renderQAQueries(){
+async function renderQAQueries(){
+  const dropdown = document.getElementById('qa-dropdown');
+  try {
+    const res = await fetch(API+'/compliance-questions');
+    const data = await res.json();
+    const questions = data.questions || SAMPLE_QUERIES;
+    questions.forEach(q => {
+      const opt = document.createElement('option');
+      opt.value = q;
+      opt.textContent = q.length > 65 ? q.substring(0, 65) + '...' : q;
+      dropdown.appendChild(opt);
+    });
+  } catch(e) {
+    SAMPLE_QUERIES.forEach(q => {
+      const opt = document.createElement('option');
+      opt.value = q;
+      opt.textContent = q;
+      dropdown.appendChild(opt);
+    });
+  }
+
+  // Keep 10 quick-access buttons
   const container = document.getElementById('qa-queries');
   container.innerHTML = SAMPLE_QUERIES.map(q=>`
     <button class="qa-query-btn" onclick="askQuestion(this,'${q.replace(/'/g,"\\'")}')">

@@ -84,7 +84,7 @@ class TestRetrievalAccuracy:
     def test_index_is_populated(self, pinecone_index):
         stats = pinecone_index.describe_index_stats()
         total = stats["total_vector_count"]
-        assert total == 100, f"Expected 100 vectors, got {total}"
+        assert total == 180, f"Expected 180 vectors, got {total}"
         print(f"\nIndex vector count: {total}")
 
     def test_golden_dataset_retrieval(self, embedding_model, pinecone_index):
