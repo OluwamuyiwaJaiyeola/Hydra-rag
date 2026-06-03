@@ -470,23 +470,6 @@ def list_regulations():
         "total": len(REGULATIONS)
     }
 
-
-@app.get("/compliance-questions")
-def get_compliance_questions():
-    try:
-        with open("data/hydra_compliance_questions_cleaned.json") as f:
-            questions = json.load(f)
-        seen = set()
-        unique = []
-        for q in questions:
-            if q["query_text"] not in seen:
-                seen.add(q["query_text"])
-                unique.append(q["query_text"])
-        return {"questions": unique, "total": len(unique)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-
 # Endpoint 5: Live index stats
 @app.get("/stats")
 def get_stats():
