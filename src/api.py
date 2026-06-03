@@ -11,7 +11,9 @@ import logging
 import time
 import re
 import re as _re
-
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 
 logging.basicConfig(
     filename="hydra_queries.log",
@@ -529,3 +531,9 @@ def get_analytics():
             "avg_response_time": 0,
             "avg_similarity_score": 0
         }
+
+
+# Serve frontend
+@app.get("/app")
+def serve_frontend():
+    return FileResponse("hydra_frontend.html")

@@ -174,3 +174,4 @@ websocket-client==1.9.0
 websockets==16.0
 widgetsnbextension==4.0.15
 yarl==1.24.2
+aiofiles==23.2.1
