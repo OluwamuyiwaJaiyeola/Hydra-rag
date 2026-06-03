@@ -199,7 +199,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   <div class="header-stats">
     <div class="stat"><div class="stat-num">20</div><div class="stat-label">Regulations</div></div>
     <div class="stat"><div class="stat-num">5</div><div class="stat-label">Jurisdictions</div></div>
-    <div class="stat"><div class="stat-num">100</div><div class="stat-label">Vectors</div></div>
+    <div class="stat-num" id="vector-count">180</div><div class="stat-label">Vectors</div>
     <div class="stat"><div class="stat-num" id="api-status">●</div><div class="stat-label">API Live</div></div>
     <button id="theme-toggle" onclick="toggleTheme()" style="background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;margin-left:16px">☀ Light</button>
   </div>
@@ -482,6 +482,8 @@ async function doSearch(){
 
 async function renderQAQueries(){
   const dropdown = document.getElementById('qa-dropdown');
+  // Prevent duplicate population on tab switch
+  if(dropdown.options.length > 1) return;
   try {
     const res = await fetch(API+'/compliance-questions');
     const data = await res.json();
@@ -596,7 +598,7 @@ async function showDetail(id, el){
 }
 
 async function renderAnalytics(){
-  let stats = {total_vectors: 100, total_regulations: 20, jurisdictions: 5, dimensions: 768};
+  let stats = {total_vectors: 180, total_regulations: 20, jurisdictions: 5, dimensions: 768};
   let analytics = {
     total_queries: 0, hallucination_blocked: 0, hallucination_rate: 0,
     avg_response_time: 0, avg_similarity_score: 0.55
@@ -685,6 +687,11 @@ fetch(API+'/').then(r=>{
 }).catch(()=>{
   document.getElementById('api-status').style.color='var(--coral)';
 });
+
+fetch(API+'/stats').then(r=>r.json()).then(d=>{
+  const el = document.getElementById('vector-count');
+  if(el) el.textContent = d.total_vectors;
+}).catch(()=>{});
 
 // Initial search
 document.getElementById('search-input').addEventListener('keydown', e=>{

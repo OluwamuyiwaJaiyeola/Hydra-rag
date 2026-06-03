@@ -62,7 +62,7 @@ def detect_category_prefix(query: str) -> str:
     return query
 
 
-def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
+def retrieve_chunks(query: str, index, model, top_k: int = 5, filter_dict: dict = None) -> list:
     """
     Retrieve top-k unique regulation chunks for a query.
     Applies category prefix to query before embedding to improve
@@ -73,9 +73,11 @@ def retrieve_chunks(query: str, index, model, top_k: int = 5) -> list:
 
     raw_results = index.query(
         vector=query_vector,
-        top_k=20,
-        include_metadata=True
+        top_k=50,
+        include_metadata=True,
+        filter=filter_dict
     )
+    
     matches = raw_results["matches"]
 
     # Deduplicate by chunk_text keeping highest score per unique clause

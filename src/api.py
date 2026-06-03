@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from transformers import pipeline as hf_pipeline
 from src.rag_chain import retrieve_chunks, format_context, detect_category_prefix
 from src.config import HUGGINGFACE_MODEL
 from sentence_transformers import SentenceTransformer
@@ -145,7 +144,8 @@ def compliance_qa(request: QueryRequest):
             query=request.question,
             index=index,
             model=embedding_model,
-            top_k=request.top_k or 5
+            top_k=request.top_k or 5,
+            filter_dict=filter_dict
         )
 
         if not matches or matches[0]["score"] < 0.3:
@@ -254,7 +254,7 @@ def compliance_qa(request: QueryRequest):
         prompt = f"""You are a regulatory compliance expert. Read the regulation text and answer the question accurately.
         Rules:
         1. Answer in one clear sentence
-        2. End your answer with the exact article reference in brackets like [Article 2.3] or [Section 5.7]
+        2. End your answer with the EXACT reference as it appears in the source text. If the text says 'Clause 4.6' write [Clause 4.6]. If it says 'Section 2.1' write [Section 2.1]. If it says 'Provision 3.1' write [Provision 3.1]. Never change the reference type.
         3. Use ONLY information from the regulation text provided
         {jurisdiction_note}
 
