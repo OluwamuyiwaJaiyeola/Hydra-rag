@@ -345,7 +345,9 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 
 <script>
-const API = 'http://localhost:8000';
+const API = window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : 'https://thatblvck-hydra-analytics.hf.space';
 let searchJurisdiction = '';
 let searchCategory = '';
 let qaJurisdiction = '';
