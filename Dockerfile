@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src/
 COPY data/ ./data/
 COPY hydra_frontend.html .
-COPY hydra_queries.log .
+
 
 # Create logs directory
 RUN touch hydra_queries.log

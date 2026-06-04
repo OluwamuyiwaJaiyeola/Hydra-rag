@@ -9,9 +9,9 @@ from src.config import PINECONE_API_KEY, PINECONE_INDEX_NAME
 import logging
 import time
 import re
-import re as _re
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+import json as _json
 import os
 
 logging.basicConfig(
@@ -20,27 +20,16 @@ logging.basicConfig(
     format="%(asctime)s - %(message)s"
 )
 
+with open("data/hydra_regulations_cleaned.json") as _f:
+    _raw = __import__('json').load(_f)
 REGULATIONS = [
-    {"id": 1, "title": "Digital Identity Protection Regulation", "jurisdiction": "Brazil", "category": "GDPR/Data Privacy"},
-    {"id": 2, "title": "Suspicious Activity Disclosure Framework", "jurisdiction": "EU", "category": "AML/Financial Crime"},
-    {"id": 3, "title": "Climate Risk Transparency Regulation", "jurisdiction": "USA", "category": "ESG Reporting"},
-    {"id": 4, "title": "Clinical Information Governance Act", "jurisdiction": "USA", "category": "Healthcare Compliance"},
-    {"id": 5, "title": "Critical Infrastructure Cyber Defense Regulation", "jurisdiction": "Brazil", "category": "Cybersecurity"},
-    {"id": 6, "title": "Electronic Consent and Retention Framework", "jurisdiction": "Kenya", "category": "GDPR/Data Privacy"},
-    {"id": 7, "title": "Financial Transaction Monitoring Order", "jurisdiction": "EU", "category": "AML/Financial Crime"},
-    {"id": 8, "title": "Climate Risk Transparency Regulation", "jurisdiction": "EU", "category": "ESG Reporting"},
-    {"id": 9, "title": "Clinical Information Governance Act", "jurisdiction": "USA", "category": "Healthcare Compliance"},
-    {"id": 10, "title": "Network Resilience and Breach Notification Code", "jurisdiction": "Kenya", "category": "Cybersecurity"},
-    {"id": 11, "title": "Electronic Consent and Retention Framework", "jurisdiction": "Brazil", "category": "GDPR/Data Privacy"},
-    {"id": 12, "title": "Cross-Institutional AML Governance Act", "jurisdiction": "USA", "category": "AML/Financial Crime"},
-    {"id": 13, "title": "Environmental Impact Governance Standard", "jurisdiction": "Kenya", "category": "ESG Reporting"},
-    {"id": 14, "title": "Medical Provider Compliance Directive", "jurisdiction": "EU", "category": "Healthcare Compliance"},
-    {"id": 15, "title": "Digital Systems Integrity Directive", "jurisdiction": "Brazil", "category": "Cybersecurity"},
-    {"id": 16, "title": "Cross-Border Personal Information Control Act", "jurisdiction": "UK", "category": "GDPR/Data Privacy"},
-    {"id": 17, "title": "Anti-Illicit Banking Standards Regulation", "jurisdiction": "USA", "category": "AML/Financial Crime"},
-    {"id": 18, "title": "Corporate Sustainability Disclosure Code", "jurisdiction": "UK", "category": "ESG Reporting"},
-    {"id": 19, "title": "Patient Safety and Audit Framework", "jurisdiction": "EU", "category": "Healthcare Compliance"},
-    {"id": 20, "title": "Enterprise Security Governance Framework", "jurisdiction": "EU", "category": "Cybersecurity"}
+    {
+        "id": r["regulation_id"],
+        "title": r["title"],
+        "jurisdiction": r["jurisdiction"],
+        "category": r["category"]
+    }
+    for r in _raw
 ]
 
 app = FastAPI(
@@ -53,8 +42,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["http://localhost:8000", "https://thatblvck-hydra-analytics.hf.space"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -196,24 +185,26 @@ def compliance_qa(request: QueryRequest):
 
 
         # Hallucination guard: detect fictional regulations and unknown jurisdictions
-        FICTIONAL_SIGNALS = [
-            'hydra compliance directive',
-            'hydra directive',
-            'australia', 'australian',
-            'canada', 'canadian',
-            'india', 'indian',
-            'china', 'chinese',
-            'japan', 'japanese',
-            'singapore',
-            'new zealand',
-            'south africa',
+        FICTIONAL_REGULATIONS = ['hydra compliance directive', 'hydra directive']
+        OUT_OF_SCOPE_JURISDICTIONS = [
+            'australia', 'australian', 'canada', 'canadian',
+            'india', 'indian', 'china', 'chinese',
+            'japan', 'japanese', 'singapore',
+            'new zealand', 'south africa',
         ]
 
         is_fictional_regulation = any(
             f' {signal} ' in f' {question_lower} ' or
             question_lower.startswith(signal) or
             question_lower.endswith(signal)
-            for signal in FICTIONAL_SIGNALS
+            for signal in FICTIONAL_REGULATIONS
+        )
+
+        is_out_of_scope = any(
+            f' {signal} ' in f' {question_lower} ' or
+            question_lower.startswith(signal) or
+            question_lower.endswith(signal)
+            for signal in OUT_OF_SCOPE_JURISDICTIONS
         )
 
         is_unknown_jurisdiction = (
@@ -221,21 +212,23 @@ def compliance_qa(request: QueryRequest):
             asked_jurisdiction not in {'Brazil', 'EU', 'Kenya', 'UK', 'USA'}
         )
 
-        if is_fictional_regulation or is_unknown_jurisdiction:
+        if is_fictional_regulation:
             elapsed = round(time.time() - start_time, 3)
-            logging.info(
-                f"query='{request.question}' result=hallucination_blocked elapsed={elapsed}s"
-            )
-            if is_unknown_jurisdiction:
-                answer_msg = f"There are no {asked_jurisdiction} regulations in the indexed database. The Hydra Analytics platform currently covers Brazil, EU, Kenya, UK, and USA only."
-            else:
-                answer_msg = "The regulation referenced in your query does not exist in the indexed database. The Hydra Analytics platform covers regulations for Brazil, EU, Kenya, UK, and USA only. Please refine your query."
+            logging.info(f"query='{request.question}' result=hallucination_blocked elapsed={elapsed}s")
             return QueryResponse(
                 question=request.question,
-                answer=answer_msg,
-                citations=[],
-                regulation_ids=[],
-                confidence=0.0
+                answer="The regulation referenced in your query does not exist in the indexed database. The Hydra Analytics platform covers regulations for Brazil, EU, Kenya, UK, and USA only.",
+                citations=[], regulation_ids=[], confidence=0.0
+            )
+
+        if is_out_of_scope or is_unknown_jurisdiction:
+            elapsed = round(time.time() - start_time, 3)
+            logging.info(f"query='{request.question}' result=out_of_scope elapsed={elapsed}s")
+            jurisdiction_name = asked_jurisdiction or "this jurisdiction"
+            return QueryResponse(
+                question=request.question,
+                answer=f"{jurisdiction_name} is not currently indexed in the Hydra Analytics platform. Current coverage: Brazil, EU, Kenya, UK, and USA.",
+                citations=[], regulation_ids=[], confidence=0.0
             )
 
         jurisdiction_note = ""
