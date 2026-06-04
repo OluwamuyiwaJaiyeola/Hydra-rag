@@ -17,3 +17,4 @@ AI-powered regulatory compliance search and Q&A platform built with RAG (Retriev
 - Vector DB: Pinecone
 - LLM: Phi-3-mini-4k-instruct via HuggingFace
 - API: FastAPI
+
