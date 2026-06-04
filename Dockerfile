@@ -26,3 +26,4 @@ EXPOSE 7860
 
 # Run the application
 CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "7860"]
+# cache bust Thu Jun  4 22:22:42 BST 2026
