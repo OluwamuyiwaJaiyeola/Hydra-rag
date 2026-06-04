@@ -10,7 +10,6 @@ import logging
 import time
 import re
 from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 import json as _json
 import os
 
@@ -112,7 +111,7 @@ def root():
         "platform": "Hydra Analytics Compliance Intelligence API",
         "status": "running",
         "version": "1.0.0",
-        "endpoints": ["/compliance-qa", "/search", "/summarize", "/docs"]
+        "endpoints": ["/compliance-qa", "/search", "/summarize", "/regulations", "/stats", "/analytics", "/evaluation-metrics", "/docs"]
     }
 
 # Endpoint 1: Compliance Q&A
@@ -153,30 +152,88 @@ def compliance_qa(request: QueryRequest):
 
         confidence = round(matches[0]["score"], 4)
 
+        # Define question_lower early - used by multiple blocks below
+        question_lower = request.question.lower()
+
         detected = detect_category_prefix(request.question)
         if ':' in detected:
             cat = detected.split(':')[0].strip()
             cat_matches = [m for m in matches if m['metadata'].get('category') == cat]
-            if len(cat_matches) >= 2:  # Only filter if we have enough category matches
+            if len(cat_matches) >= 2:
                 matches = cat_matches
 
         context = format_context(matches)
 
+        # ── Penalty/fine handler ───────────────────────────────────────────
+        # Phi-3 cannot reliably combine multiple penalty clauses in one answer.
+        # For broad penalty queries with no jurisdiction filter, build the answer
+        # programmatically from the retrieved chunks.
+        PENALTY_SIGNALS = [
+            'maximum fine', 'maximum penalty', 'what is the fine',
+            'what are the penalties', 'fine for violations',
+            'penalties for violations', 'what penalties'
+        ]
+        is_broad_penalty = (
+            any(s in question_lower for s in PENALTY_SIGNALS)
+            and not request.jurisdiction
+            and not any(j in question_lower for j in ['kenya', 'eu', 'brazil', 'uk', 'usa', 'united states', 'united kingdom'])
+        )
+
+        if is_broad_penalty:
+            penalty_keywords = ['percent', 'million', 'suspension', 'fine', 'penalt', 'sanction']
+            penalty_chunks = [
+                m for m in matches
+                if any(kw in m['metadata'].get('chunk_text', '').lower() for kw in penalty_keywords)
+            ]
+            if len(penalty_chunks) >= 2:
+                parts = []
+                seen_refs = set()
+                penalty_cites = []
+                for chunk in penalty_chunks[:3]:
+                    ref = chunk['metadata'].get('article_ref', '')
+                    if ref in seen_refs:
+                        continue
+                    seen_refs.add(ref)
+                    text = chunk['metadata'].get('chunk_text', '')
+                    for sentence in text.split('.'):
+                        if any(kw in sentence.lower() for kw in penalty_keywords):
+                            parts.append(sentence.strip() + f' [{ref}].')
+                            penalty_cites.append(Citation(
+                                regulation_id=int(chunk['metadata']['regulation_id']),
+                                title=chunk['metadata']['title'],
+                                jurisdiction=chunk['metadata']['jurisdiction'],
+                                score=round(chunk['score'], 4),
+                                article_ref=ref,
+                                chunk_text=text
+                            ))
+                            break
+                if parts:
+                    combined_answer = ' '.join(parts)
+                    elapsed = round(time.time() - start_time, 3)
+                    logging.info(
+                        f"query='{request.question}' jurisdiction='{request.jurisdiction}' "
+                        f"top_score={confidence} result=penalty_combined elapsed={elapsed}s"
+                    )
+                    return QueryResponse(
+                        question=request.question,
+                        answer=combined_answer,
+                        citations=penalty_cites,
+                        regulation_ids=[int(m['metadata']['regulation_id']) for m in penalty_chunks[:3]],
+                        confidence=confidence
+                    )
+        # ── End penalty handler ────────────────────────────────────────────
+
         # Detect if user asked about a specific jurisdiction
-        
         jurisdiction_mentions = {
-            'kenya': 'Kenya', 'KENYA': 'Kenya', 'eu': 'EU', 'european union': 'EU', 'European Union': 'EU',
-            'brazil': 'Brazil', 'uk': 'UK', 'united kingdom': 'UK', 'United Kingdom': 'UK',
-            'usa': 'USA', 'united states': 'USA', 'america': 'USA', 'United States': 'USA', 'America': 'USA',
+            'kenya': 'Kenya', 'eu': 'EU', 'european union': 'EU',
+            'brazil': 'Brazil', 'uk': 'UK', 'united kingdom': 'UK',
+            'usa': 'USA', 'united states': 'USA', 'america': 'USA',
         }
-        question_lower = request.question.lower()
         asked_jurisdiction = None
         for term, jname in jurisdiction_mentions.items():
             if term in question_lower:
                 asked_jurisdiction = jname
                 break
-
-        # Check if retrieved regulations match the asked jurisdiction
         retrieved_jurisdictions = list(set([m["metadata"]["jurisdiction"] for m in matches]))
         jurisdiction_mismatch = (
             asked_jurisdiction and
@@ -246,17 +303,15 @@ def compliance_qa(request: QueryRequest):
 
         prompt = f"""You are a regulatory compliance expert. Read the regulation text and answer the question accurately.
         Rules:
-        1. Answer in one clear sentence
-        2. End your answer with the EXACT reference as it appears in the source text. If the text says 'Clause 4.6' write [Clause 4.6]. If it says 'Section 2.1' write [Section 2.1]. If it says 'Provision 3.1' write [Provision 3.1]. Never change the reference type.
-        3. Use ONLY information from the regulation text provided
+        1. If the question asks about fines, penalties, or sanctions, mention ALL penalty figures found in the regulations provided. Use two sentences if needed.
+        2. For all other questions, answer in one clear sentence.
+        3. End your answer with the EXACT reference as it appears in the source text. If the text says 'Clause 4.6' write [Clause 4.6]. If it says 'Section 2.1' write [Section 2.1]. If it says 'Provision 3.1' write [Provision 3.1]. Never change the reference type.
+        4. Use ONLY information from the regulation text provided.
         {jurisdiction_note}
-
 REGULATIONS:
 {context}
-
 QUESTION:
 {request.question}
-
 ANSWER:"""
 
         try:
@@ -288,22 +343,29 @@ ANSWER:"""
             for m in matches
         ]
 
-        # Extract article reference from the generated answer
-        answer_ref_match = re.search(
+        # Extract article references from the generated answer
+        answer_refs = re.findall(
             r'(Article|Section|Clause|Provision|Rule)\s+[\d\.]+',
             answer,
             re.IGNORECASE
         )
 
-        if answer_ref_match:
-            used_ref = answer_ref_match.group(0).strip().lower()
-            matching = [c for c in citations if used_ref in c.article_ref.lower()]
-            if matching and asked_jurisdiction:
-                # Prefer citation from the asked jurisdiction
-                jurisdiction_match = [c for c in matching if c.jurisdiction == asked_jurisdiction]
-                display_citations = jurisdiction_match if jurisdiction_match else matching
-            else:
-                display_citations = matching if matching else citations[:1]
+        if answer_refs:
+            display_citations = []
+            seen_refs = set()
+            for ref_match in answer_refs:
+                used_ref = ref_match.strip().lower()
+                if used_ref in seen_refs:
+                    continue
+                seen_refs.add(used_ref)
+                matching = [c for c in citations if used_ref in c.article_ref.lower()]
+                if matching and asked_jurisdiction:
+                    jurisdiction_match = [c for c in matching if c.jurisdiction == asked_jurisdiction]
+                    display_citations.extend(jurisdiction_match if jurisdiction_match else matching[:1])
+                elif matching:
+                    display_citations.extend(matching[:1])
+            if not display_citations:
+                display_citations = citations[:1]
         else:
             display_citations = citations[:1]
 
@@ -402,8 +464,12 @@ def semantic_search(request: SearchRequest):
 @app.post("/summarize", response_model=SummarizeResponse)
 def summarize_regulation(request: SummarizeRequest):
     try:
+        dummy_vector = embedding_model.encode(
+            f"regulation {request.regulation_id}",
+            normalize_embeddings=True
+        ).tolist()
         results = index.query(
-            vector=[0.0] * 768,
+            vector=dummy_vector,
             top_k=100,
             include_metadata=True,
             filter={"regulation_id": {"$eq": float(request.regulation_id)}}
@@ -467,13 +533,14 @@ def list_regulations():
 @app.get("/stats")
 def get_stats():
     stats = index.describe_index_stats()
+    sample = embedding_model.encode("dimension check", normalize_embeddings=True)
     return {
         "total_vectors": stats["total_vector_count"],
-        "total_regulations": 20,
-        "jurisdictions": 5,
-        "categories": 5,
+        "total_regulations": len(REGULATIONS),
+        "jurisdictions": len(set(r["jurisdiction"] for r in REGULATIONS)),
+        "categories": len(set(r["category"] for r in REGULATIONS)),
         "embedding_model": HUGGINGFACE_MODEL,
-        "dimensions": 768
+        "dimensions": len(sample)
     }
 
 @app.get("/analytics")
@@ -532,6 +599,34 @@ def get_analytics():
             "avg_similarity_score": 0
         }
 
+@app.get("/evaluation-metrics")
+def get_evaluation_metrics():
+    try:
+        metrics_path = "data/retrieval_metrics.json"
+        if not os.path.exists(metrics_path):
+            return {
+                "available": False,
+                "message": "No evaluation metrics available yet.",
+                "retrieval_at_1": None,
+                "retrieval_at_3": None,
+                "retrieval_at_5": None,
+                "citation_accuracy": None,
+                "total_cases": 0,
+                "failed_cases": 0
+            }
+        with open(metrics_path) as f:
+            metrics = _json.load(f)
+        return {
+            "available": True,
+            "retrieval_at_1": metrics.get("retrieval_at_1"),
+            "retrieval_at_3": metrics.get("retrieval_at_3"),
+            "retrieval_at_5": metrics.get("retrieval_at_5"),
+            "citation_accuracy": metrics.get("citation_accuracy"),
+            "total_cases": metrics.get("total_cases", 0),
+            "failed_cases": metrics.get("failed_cases", 0)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Serve frontend
 @app.get("/app")

@@ -1,0 +1,74 @@
+{
+  "retrieval_at_1": 73.7,
+  "retrieval_at_3": 73.7,
+  "retrieval_at_5": 78.9,
+  "citation_accuracy": null,
+  "total_cases": 19,
+  "failed_cases": 4,
+  "failures": [
+    {
+      "query": "If a company discovers a material breach, what actions are r",
+      "expected_any_of": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "retrieved": [
+        9,
+        4,
+        13,
+        20,
+        8
+      ]
+    },
+    {
+      "query": "What authority receives mandatory breach notifications?",
+      "expected_any_of": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "retrieved": [
+        19,
+        14,
+        9,
+        4,
+        14
+      ]
+    },
+    {
+      "query": "If a company discovers a material breach, what actions are r",
+      "expected_any_of": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "retrieved": [
+        9,
+        4,
+        13,
+        20,
+        8
+      ]
+    },
+    {
+      "query": "If a company discovers a material breach, what actions are r",
+      "expected_any_of": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "retrieved": [
+        9,
+        4,
+        13,
+        20,
+        8
+      ]
+    }
+  ]
+}

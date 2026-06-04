@@ -5,184 +5,210 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hydra Analytics — Compliance Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0c0f;
-  --surface:#111318;
-  --surface2:#181c22;
-  --surface3:#1e242d;
-  --border:#252b35;
-  --border2:#2e3540;
-  --text:#e8eaf0;
-  --text2:#9ba3b0;
-  --text3:#5c6472;
-  --accent:#4ade80;
-  --accent2:#22c55e;
-  --accent-dim:rgba(74,222,128,0.08);
-  --accent-border:rgba(74,222,128,0.2);
-  --blue:#60a5fa;
-  --amber:#fbbf24;
-  --coral:#f87171;
-  --purple:#a78bfa;
-  --teal:#2dd4bf;
-  --r:8px;
-  --r2:12px;
+  --bg:#07090d;
+  --surface:#0d1117;
+  --surface2:#131920;
+  --surface3:#1a2230;
+  --border:#1e2d3d;
+  --border2:#2a3f54;
+  --text:#d4dce8;
+  --text2:#7a90a8;
+  --text3:#3d5166;
+  --accent:#00e5a0;
+  --accent2:#00c484;
+  --accent-dim:rgba(0,229,160,0.07);
+  --accent-border:rgba(0,229,160,0.18);
+  --blue:#4d9fff;
+  --amber:#f5a623;
+  --coral:#ff5e5e;
+  --purple:#b06cff;
+  --teal:#00d4c8;
+  --r:6px;
+  --r2:10px;
 }
-html{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+html{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
 body{min-height:100vh;display:flex;flex-direction:column}
 
+/* GRID BACKGROUND */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:48px 48px;
+  opacity:0.25;pointer-events:none;z-index:0
+}
+body>*{position:relative;z-index:1}
+
 /* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-mark{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:15px;color:#000;font-weight:700;flex-shrink:0}
-.logo-text h1{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text);font-weight:400;letter-spacing:-0.01em}
-.logo-text p{font-size:11px;color:var(--text3);letter-spacing:0.04em;text-transform:uppercase}
-.header-stats{display:flex;gap:32px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:1px solid var(--border);background:rgba(7,9,13,0.92);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-mark{width:34px;height:34px;background:var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;color:#000;font-weight:800;flex-shrink:0;letter-spacing:-0.02em}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:15px;color:var(--text);font-weight:700;letter-spacing:-0.02em}
+.logo-text p{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:1px}
+.header-right{display:flex;align-items:center;gap:28px}
+.header-stats{display:flex;gap:24px}
 .stat{text-align:center}
-.stat-num{font-family:'DM Mono',monospace;font-size:20px;color:var(--text);font-weight:500;line-height:1}
-.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
+.stat-num{font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--text);font-weight:500;line-height:1}
+.stat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px}
+.api-dot{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);padding:5px 10px;border:1px solid var(--border);border-radius:20px}
+.api-dot-indicator{width:6px;height:6px;border-radius:50%;background:var(--text3)}
+.api-dot-indicator.live{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.theme-btn{background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:var(--r);cursor:pointer;font-size:10px;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.04em;transition:all 0.15s}
+.theme-btn:hover{border-color:var(--border2);color:var(--text2)}
 
 /* TABS */
-.tabs{display:flex;gap:0;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--border)}
-.tab{padding:14px 20px;font-size:13px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;font-weight:500;white-space:nowrap}
+.tabs{display:flex;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--border)}
+.tab{padding:13px 18px;font-size:12px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;font-weight:500;white-space:nowrap;letter-spacing:0.02em;font-family:'Syne',sans-serif}
 .tab:hover{color:var(--text2)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
 /* MAIN */
-.main{flex:1;padding:28px 32px;max-width:1200px;width:100%;margin:0 auto}
+.main{flex:1;padding:24px 32px;max-width:1280px;width:100%;margin:0 auto}
 
-/* JURISDICTION BAR */
-.jurisdiction-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.jurisdiction-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px}
-.j-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;font-weight:500}
-.j-btn:hover{border-color:var(--border2);background:var(--surface3);color:var(--text)}
+/* FILTER BARS */
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;font-weight:500}
+.j-btn{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;transition:all 0.15s;font-family:'IBM Plex Sans',sans-serif;font-weight:500}
+.j-btn:hover{border-color:var(--border2);color:var(--text2)}
 .j-btn.active{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent)}
-.j-flag{margin-right:5px;font-size:13px}
-
-/* CATEGORY BAR */
-.category-bar{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
-.cat-btn{padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:0.04em}
+.j-flag{margin-right:4px;font-size:12px}
+.cat-btn{padding:3px 10px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:10px;cursor:pointer;transition:all 0.15s;font-family:'IBM Plex Sans',sans-serif;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
 .cat-btn:hover{background:var(--surface3);color:var(--text2)}
 .cat-btn.active{background:var(--surface3);border-color:var(--border2);color:var(--text)}
 
 /* SEARCH */
-.search-wrap{position:relative;margin-bottom:20px}
-.search-input{width:100%;padding:14px 48px 14px 18px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r2);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
+.search-wrap{position:relative;margin-bottom:16px}
+.search-input{width:100%;padding:13px 48px 13px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);color:var(--text);font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s}
 .search-input:focus{border-color:var(--accent-border)}
 .search-input::placeholder{color:var(--text3)}
-.search-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.search-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--accent);border:none;border-radius:5px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .search-btn:hover{background:var(--accent2)}
-.search-btn svg{width:14px;height:14px;stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.search-btn svg{width:13px;height:13px;stroke:#000;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 
-/* RESULTS COUNT */
-.results-meta{font-size:12px;color:var(--text3);margin-bottom:16px}
-.results-meta span{color:var(--text2);font-weight:500}
+/* RESULTS */
+.results-meta{font-size:11px;color:var(--text3);margin-bottom:14px;font-family:'IBM Plex Mono',monospace}
+.results-meta span{color:var(--text2)}
 
-/* REGULATION CARDS */
-.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.reg-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all 0.15s}
-.reg-card:hover{border-color:var(--border2);background:var(--surface3)}
-.reg-card.selected{border-color:var(--accent-border);background:var(--accent-dim)}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.card-cat{font-size:10px;padding:3px 8px;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0}
-.cat-gdpr{background:rgba(96,165,250,0.12);color:var(--blue)}
-.cat-aml{background:rgba(251,191,36,0.12);color:var(--amber)}
-.cat-esg{background:rgba(45,212,191,0.12);color:var(--teal)}
-.cat-health{background:rgba(248,113,113,0.12);color:var(--coral)}
-.cat-cyber{background:rgba(167,139,250,0.12);color:var(--purple)}
-.card-score{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
-.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.4}
-.card-meta{display:flex;gap:12px;margin-bottom:8px}
-.card-jurisdiction{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
-.card-excerpt{font-size:12px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.reg-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
+.reg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background 0.15s}
+.reg-card:hover{border-color:var(--border2);background:var(--surface2)}
+.reg-card:hover::before{background:var(--accent)}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.card-cat{font-size:9px;padding:2px 7px;border-radius:2px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+.cat-gdpr{background:rgba(77,159,255,0.1);color:var(--blue);border:1px solid rgba(77,159,255,0.2)}
+.cat-aml{background:rgba(245,166,35,0.1);color:var(--amber);border:1px solid rgba(245,166,35,0.2)}
+.cat-esg{background:rgba(0,212,200,0.1);color:var(--teal);border:1px solid rgba(0,212,200,0.2)}
+.cat-health{background:rgba(255,94,94,0.1);color:var(--coral);border:1px solid rgba(255,94,94,0.2)}
+.cat-cyber{background:rgba(176,108,255,0.1);color:var(--purple);border:1px solid rgba(176,108,255,0.2)}
+.card-score{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3)}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4;font-family:'Syne',sans-serif}
+.card-meta{display:flex;gap:10px;margin-bottom:8px}
+.card-jurisdiction{font-size:11px;color:var(--text3)}
+.card-excerpt{font-size:11px;color:var(--text2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
-/* QA PANEL */
-.qa-layout{display:grid;grid-template-columns:280px 1fr;gap:20px}
-.qa-queries{display:flex;flex-direction:column;gap:6px}
-.qa-query-btn{padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text2);font-size:12px;cursor:pointer;text-align:left;transition:all 0.15s;font-family:'DM Sans',sans-serif;line-height:1.4}
-.qa-query-btn:hover{border-color:var(--border2);background:var(--surface3);color:var(--text)}
+/* QA */
+.qa-layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.qa-queries{display:flex;flex-direction:column;gap:5px}
+.qa-query-btn{padding:9px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text3);font-size:11px;cursor:pointer;text-align:left;transition:all 0.15s;font-family:'IBM Plex Sans',sans-serif;line-height:1.4}
+.qa-query-btn:hover{border-color:var(--border2);background:var(--surface2);color:var(--text)}
 .qa-query-btn.active{border-color:var(--accent-border);background:var(--accent-dim);color:var(--accent)}
-.qa-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;margin-top:4px}
-.qa-response{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;min-height:300px}
-.qa-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--text3);text-align:center;gap:8px}
-.qa-empty-icon{font-size:32px;opacity:0.3}
-.qa-question{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
-.qa-q-icon{width:24px;height:24px;border-radius:50%;background:var(--surface3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.qa-q-icon svg{width:12px;height:12px;stroke:var(--text3);fill:none;stroke-width:2}
-.qa-q-text{font-size:13px;color:var(--text2);font-style:italic}
-.qa-answer{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:16px}
-.qa-verified{display:inline-flex;align-items:center;gap:5px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);color:var(--accent);font-size:11px;padding:3px 10px;border-radius:20px;margin-bottom:16px;font-weight:500}
-.qa-verified svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5}
-.qa-citation{background:var(--surface3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px}
-.qa-citation-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;font-weight:600}
-.qa-citation-text{font-size:12px;color:var(--text2);font-style:italic}
-.qa-loading{display:flex;align-items:center;gap:10px;color:var(--text3);font-size:13px;padding:20px 0}
-.qa-loading-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+.qa-section-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.qa-response{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px;min-height:320px}
+.qa-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:320px;color:var(--text3);text-align:center;gap:10px}
+.qa-empty-icon{font-size:28px;opacity:0.2}
+.qa-empty-text{font-size:12px;max-width:200px;line-height:1.5}
+.qa-question{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.qa-q-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:3px;font-family:'IBM Plex Mono',monospace}
+.qa-q-text{font-size:13px;color:var(--text2)}
+.qa-answer{font-size:14px;color:var(--text);line-height:1.75;margin-bottom:14px}
+.qa-verified{display:inline-flex;align-items:center;gap:5px;background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent);font-size:10px;padding:3px 10px;border-radius:20px;margin-bottom:14px;font-weight:600;letter-spacing:0.02em;font-family:'IBM Plex Mono',monospace}
+.qa-verified svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.5}
+.qa-low-conf{display:inline-flex;align-items:center;gap:5px;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);color:var(--amber);font-size:10px;padding:3px 10px;border-radius:20px;margin-bottom:14px;font-weight:500;font-family:'IBM Plex Mono',monospace;margin-left:8px}
+.qa-citation{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-top:4px}
+.qa-citation-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.qa-citation-item{padding:6px 0;border-bottom:1px solid var(--border)}
+.qa-citation-item:last-child{border-bottom:none;padding-bottom:0}
+.qa-citation-ref{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);font-weight:500}
+.qa-citation-title{font-size:11px;color:var(--text2);margin-top:2px}
+.qa-citation-score{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3)}
+.qa-loading{display:flex;align-items:center;gap:10px;color:var(--text3);font-size:12px;padding:20px 0}
+.qa-loading-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
 .qa-loading-dot:nth-child(2){animation-delay:0.2s}
 .qa-loading-dot:nth-child(3){animation-delay:0.4s}
-@keyframes pulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,80%,100%{opacity:0.25;transform:scale(0.75)}40%{opacity:1;transform:scale(1)}}
+.qa-disclaimer{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.15);color:var(--amber);font-size:10px;padding:6px 12px;border-radius:var(--r);margin-top:10px;line-height:1.5}
 
 /* EXPLORER */
-.explorer-layout{display:grid;grid-template-columns:260px 1fr;gap:20px}
-.explorer-list{display:flex;flex-direction:column;gap:4px;max-height:600px;overflow-y:auto}
-.explorer-list::-webkit-scrollbar{width:4px}
+.explorer-layout{display:grid;grid-template-columns:240px 1fr;gap:16px}
+.explorer-list{display:flex;flex-direction:column;gap:3px;max-height:580px;overflow-y:auto;padding-right:4px}
+.explorer-list::-webkit-scrollbar{width:3px}
 .explorer-list::-webkit-scrollbar-track{background:transparent}
 .explorer-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.explorer-item{padding:10px 12px;border-radius:var(--r);cursor:pointer;transition:all 0.12s;border:1px solid transparent}
+.explorer-item{padding:9px 11px;border-radius:var(--r);cursor:pointer;transition:all 0.12s;border:1px solid transparent}
 .explorer-item:hover{background:var(--surface2);border-color:var(--border)}
 .explorer-item.active{background:var(--surface2);border-color:var(--accent-border)}
-.explorer-item-title{font-size:12px;color:var(--text);font-weight:500;line-height:1.3;margin-bottom:3px}
-.explorer-item-meta{font-size:11px;color:var(--text3)}
-.explorer-detail{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:24px}
-.detail-header{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.detail-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);line-height:1.3;margin-bottom:8px}
+.explorer-item-title{font-size:11px;color:var(--text);font-weight:600;line-height:1.35;margin-bottom:3px;font-family:'Syne',sans-serif}
+.explorer-item-meta{font-size:10px;color:var(--text3)}
+.explorer-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:22px;min-height:400px}
+.detail-header{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.detail-title{font-family:'Syne',sans-serif;font-size:18px;color:var(--text);line-height:1.3;margin-bottom:10px;font-weight:700}
 .detail-badges{display:flex;gap:8px;flex-wrap:wrap}
-.detail-badge{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:500}
-.provision{background:var(--surface3);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
-.provision-ref{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
-.provision-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
-.provision-text{font-size:13px;color:var(--text2);line-height:1.6}
+.detail-badge{padding:3px 9px;border-radius:3px;font-size:10px;font-weight:600;letter-spacing:0.04em;font-family:'IBM Plex Mono',monospace}
+.provision{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
+.provision-ref{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.provision-tag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;font-family:'IBM Plex Mono',monospace}
+.provision-text{font-size:12px;color:var(--text2);line-height:1.65}
 
 /* ANALYTICS */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.analytics-grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.metric-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
-.metric-val{font-family:'DM Mono',monospace;font-size:32px;color:var(--text);font-weight:500;line-height:1;margin-bottom:4px}
-.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
-.metric-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.analytics-grid-top{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.analytics-grid-mid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.analytics-grid-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px;transition:border-color 0.2s}
+.metric-card.alert{border-color:rgba(255,94,94,0.3);background:rgba(255,94,94,0.04)}
+.metric-val{font-family:'IBM Plex Mono',monospace;font-size:28px;color:var(--text);font-weight:500;line-height:1;margin-bottom:5px}
+.metric-val.green{color:var(--accent)}
+.metric-val.amber{color:var(--amber)}
+.metric-val.red{color:var(--coral)}
+.metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;font-weight:600}
+.metric-sub{font-size:10px;color:var(--text3);margin-top:4px}
 .metric-sub span{color:var(--accent)}
-.chart-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
-.chart-title{font-size:12px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:16px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.bar-label{font-size:11px;color:var(--text2);width:120px;flex-shrink:0}
-.bar-track{flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
-.bar-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);width:20px;text-align:right}
-.pie-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.pie-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.pie-name{font-size:12px;color:var(--text2);flex:1}
-.pie-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px}
+.chart-title{font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{font-size:11px;color:var(--text2);width:100px;flex-shrink:0}
+.bar-track{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.bar-count{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);width:18px;text-align:right}
+.pie-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.pie-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pie-name{font-size:11px;color:var(--text2);flex:1}
+.pie-pct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3)}
+.accuracy-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px}
+.accuracy-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.accuracy-label{font-size:11px;color:var(--text2)}
+.accuracy-bar-wrap{display:flex;align-items:center;gap:10px;flex:1;margin-left:16px}
+.accuracy-bar-track{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.accuracy-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.accuracy-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);width:42px;text-align:right}
 
-/* EMPTY / LOADING STATES */
+/* STATES */
 .panel{display:none}
 .panel.active{display:block}
-.loading-state{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px;padding:40px 0;justify-content:center}
-:root.light-mode{
-    --bg:#f0f2f5;
-    --surface:#ffffff;
-    --surface2:#f5f6f8;
-    --surface3:#ebedf0;
-    --border:#d1d5db;
-    --border2:#9ca3af;
-    --text:#111827;
-    --text2:#374151;
-    --text3:#6b7280;
-    --accent:#16a34a;
-    --accent2:#15803d;
-    --accent-dim:rgba(22,163,74,0.08);
-    --accent-border:rgba(22,163,74,0.2);
+.loading-state{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:12px;padding:36px 0;justify-content:center;font-family:'IBM Plex Mono',monospace}
+.loading-state::before{content:'';width:14px;height:14px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* LIGHT MODE */
+:root.light{
+  --bg:#f2f4f7;--surface:#ffffff;--surface2:#f7f8fa;--surface3:#edf0f3;
+  --border:#dde2e8;--border2:#b8c2cc;--text:#1a2332;--text2:#4a5568;
+  --text3:#8a9ab0;--accent:#009970;--accent2:#007a5a;
+  --accent-dim:rgba(0,153,112,0.07);--accent-border:rgba(0,153,112,0.2);
 }
 </style>
 </head>
@@ -196,19 +222,24 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <p>Hydra Analytics — RAG-powered legal search</p>
     </div>
   </div>
-  <div class="header-stats">
-    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Regulations</div></div>
-    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Jurisdictions</div></div>
-    <div class="stat"><div class="stat-num" id="vector-count">180</div><div class="stat-label">Vectors</div></div>
-    <div class="stat"><div class="stat-num" id="api-status">●</div><div class="stat-label">API Live</div></div>
-    <button id="theme-toggle" onclick="toggleTheme()" style="background:transparent;border:1px solid var(--border);color:var(--text3);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;margin-left:16px">☀ Light</button>
+  <div class="header-right">
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num" id="h-regs">—</div><div class="stat-label">Regulations</div></div>
+      <div class="stat"><div class="stat-num" id="h-vectors">—</div><div class="stat-label">Vectors</div></div>
+      <div class="stat"><div class="stat-num" id="h-dims">—</div><div class="stat-label">Dimensions</div></div>
+    </div>
+    <div class="api-dot" id="api-status-wrap">
+      <div class="api-dot-indicator" id="api-dot"></div>
+      <span id="api-status-text">Connecting</span>
+    </div>
+    <button class="theme-btn" id="theme-toggle" onclick="toggleTheme()">☀ Light</button>
   </div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('search',this)">Semantic search</div>
+  <div class="tab active" onclick="switchTab('search',this)">Semantic Search</div>
   <div class="tab" onclick="switchTab('qa',this)">Compliance Q&A</div>
-  <div class="tab" onclick="switchTab('explorer',this)">Regulation explorer</div>
+  <div class="tab" onclick="switchTab('explorer',this)">Regulation Explorer</div>
   <div class="tab" onclick="switchTab('analytics',this)">Analytics</div>
 </div>
 
@@ -216,8 +247,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
   <!-- SEARCH PANEL -->
   <div class="panel active" id="panel-search">
-    <div class="jurisdiction-bar">
-      <span class="jurisdiction-label">Jurisdiction</span>
+    <div class="filter-bar">
+      <span class="filter-label">Jurisdiction</span>
       <button class="j-btn active" onclick="setJurisdiction('',this)">All</button>
       <button class="j-btn" onclick="setJurisdiction('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
       <button class="j-btn" onclick="setJurisdiction('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
@@ -225,28 +256,29 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <button class="j-btn" onclick="setJurisdiction('UK',this)"><span class="j-flag">🇬🇧</span>UK</button>
       <button class="j-btn" onclick="setJurisdiction('USA',this)"><span class="j-flag">🇺🇸</span>USA</button>
     </div>
-    <div class="category-bar">
-      <button class="cat-btn active" onclick="setCategory('',this)">All categories</button>
-      <button class="cat-btn" onclick="setCategory('GDPR/Data Privacy',this)">Data privacy</button>
-      <button class="cat-btn" onclick="setCategory('AML/Financial Crime',this)">AML / financial</button>
+    <div class="filter-bar" style="margin-bottom:18px">
+      <span class="filter-label">Category</span>
+      <button class="cat-btn active" onclick="setCategory('',this)">All</button>
+      <button class="cat-btn" onclick="setCategory('GDPR/Data Privacy',this)">Data Privacy</button>
+      <button class="cat-btn" onclick="setCategory('AML/Financial Crime',this)">AML</button>
       <button class="cat-btn" onclick="setCategory('ESG Reporting',this)">ESG</button>
       <button class="cat-btn" onclick="setCategory('Healthcare Compliance',this)">Healthcare</button>
       <button class="cat-btn" onclick="setCategory('Cybersecurity',this)">Cybersecurity</button>
     </div>
     <div class="search-wrap">
-      <input class="search-input" id="search-input" placeholder="Search regulations by topic, jurisdiction, or obligation..." onkeydown="if(event.key==='Enter')doSearch()" oninput="if(!this.value.trim()) showAllRegulations()">
+      <input class="search-input" id="search-input" placeholder="Search regulations by topic, jurisdiction, or obligation..." onkeydown="if(event.key==='Enter')doSearch()" oninput="if(!this.value.trim())showAllRegulations()">
       <button class="search-btn" onclick="doSearch()">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </button>
     </div>
     <div class="results-meta" id="search-meta"></div>
-    <div class="cards-grid" id="search-results"></div>
+    <div class="cards-grid" id="search-results"><div class="loading-state">Loading regulations</div></div>
   </div>
 
   <!-- QA PANEL -->
   <div class="panel" id="panel-qa">
-    <div class="jurisdiction-bar" style="margin-bottom:20px">
-      <span class="jurisdiction-label">Jurisdiction</span>
+    <div class="filter-bar" style="margin-bottom:18px">
+      <span class="filter-label">Jurisdiction filter</span>
       <button class="j-btn active" onclick="setQAJurisdiction('',this)">All</button>
       <button class="j-btn" onclick="setQAJurisdiction('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
       <button class="j-btn" onclick="setQAJurisdiction('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
@@ -256,24 +288,28 @@ body{min-height:100vh;display:flex;flex-direction:column}
     </div>
     <div class="qa-layout">
       <div>
-        <div class="qa-section-label">Sample compliance queries</div>
+        <div class="qa-section-label">Sample queries</div>
         <div class="qa-queries" id="qa-queries"></div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
         <div style="display:flex;gap:8px">
-          <input id="qa-custom-input" 
-            placeholder="Type your own compliance question..." 
-            style="flex:1;padding:12px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none"
-            onkeydown="if(event.key==='Enter') askCustomQuestion()"
+          <input id="qa-custom-input"
+            placeholder="Type your own compliance question..."
+            style="flex:1;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s"
+            onkeydown="if(event.key==='Enter')askCustomQuestion()"
             onfocus="this.style.borderColor='var(--accent-border)'"
-            onblur="this.style.borderColor='var(--border2)'"
+            onblur="this.style.borderColor='var(--border)'"
           />
-          <button onclick="askCustomQuestion()" 
-            style="background:var(--accent);border:none;border-radius:var(--r);padding:0 16px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#000;white-space:nowrap">
+          <button onclick="askCustomQuestion()"
+            style="background:var(--accent);border:none;border-radius:var(--r);padding:0 16px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#000;white-space:nowrap;letter-spacing:0.02em">
             Ask
           </button>
         </div>
         <div class="qa-response" id="qa-response">
+          <div class="qa-empty">
+            <div class="qa-empty-icon">⚖</div>
+            <div class="qa-empty-text">Select a query from the left or type your own question above</div>
+          </div>
         </div>
       </div>
     </div>
@@ -281,8 +317,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
   <!-- EXPLORER PANEL -->
   <div class="panel" id="panel-explorer">
-    <div class="jurisdiction-bar" style="margin-bottom:16px">
-      <span class="jurisdiction-label">Filter</span>
+    <div class="filter-bar" style="margin-bottom:16px">
+      <span class="filter-label">Filter by jurisdiction</span>
       <button class="j-btn active" onclick="filterExplorer('',this)">All</button>
       <button class="j-btn" onclick="filterExplorer('Brazil',this)"><span class="j-flag">🇧🇷</span>Brazil</button>
       <button class="j-btn" onclick="filterExplorer('EU',this)"><span class="j-flag">🇪🇺</span>EU</button>
@@ -291,11 +327,11 @@ body{min-height:100vh;display:flex;flex-direction:column}
       <button class="j-btn" onclick="filterExplorer('USA',this)"><span class="j-flag">🇺🇸</span>USA</button>
     </div>
     <div class="explorer-layout">
-      <div class="explorer-list" id="explorer-list"></div>
+      <div class="explorer-list" id="explorer-list"><div class="loading-state">Loading</div></div>
       <div class="explorer-detail" id="explorer-detail">
-        <div class="qa-empty" style="height:400px">
+        <div class="qa-empty" style="height:360px">
           <div class="qa-empty-icon">📋</div>
-          <div style="font-size:13px;color:var(--text3)">Select a regulation to view details</div>
+          <div class="qa-empty-text">Select a regulation to view its AI-generated summary</div>
         </div>
       </div>
     </div>
@@ -303,41 +339,22 @@ body{min-height:100vh;display:flex;flex-direction:column}
 
   <!-- ANALYTICS PANEL -->
   <div class="panel" id="panel-analytics">
-    <div class="analytics-grid-4" style="grid-template-columns:repeat(5,1fr)">
-      <div class="metric-card">
-        <div class="metric-val">20</div>
-        <div class="metric-label">Total regulations</div>
-        <div class="metric-sub">across <span>5 jurisdictions</span></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val">100</div>
-        <div class="metric-label">Vector chunks</div>
-        <div class="metric-sub"><span>384-dim</span> embeddings</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val">0.55</div>
-        <div class="metric-label">Avg similarity score</div>
-        <div class="metric-sub">cosine <span>similarity</span></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val">100%</div>
-        <div class="metric-label">Retrieval accuracy</div>
-        <div class="metric-sub">specific <span>query test</span></div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val">~2h</div>
-        <div class="metric-label">Avg review time</div>
-        <div class="metric-sub">vs <span>5-8h manual</span></div>
-      </div>
+    <div class="analytics-grid-top" id="analytics-top">
+      <div class="loading-state" style="grid-column:1/-1">Fetching live data</div>
     </div>
-    <div class="analytics-grid">
+    <div class="analytics-grid-mid" id="analytics-mid"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
       <div class="chart-card">
-        <div class="chart-title">Regulations by jurisdiction</div>
+        <div class="chart-title">By jurisdiction</div>
         <div id="jurisdiction-chart"></div>
       </div>
       <div class="chart-card">
-        <div class="chart-title">Regulations by category</div>
+        <div class="chart-title">By category</div>
         <div id="category-chart"></div>
+      </div>
+      <div class="accuracy-card" id="accuracy-card">
+        <div class="chart-title">Retrieval metrics</div>
+        <div id="accuracy-chart"><div class="loading-state">Computing</div></div>
       </div>
     </div>
   </div>
@@ -345,36 +362,18 @@ body{min-height:100vh;display:flex;flex-direction:column}
 </div>
 
 <script>
-const API = window.location.hostname === 'localhost'
+const API = window.location.protocol === 'file:'
+  ? 'http://localhost:8000'
+  : window.location.hostname === 'localhost'
     ? 'http://localhost:8000'
     : 'https://thatblvck-hydra-analytics.hf.space';
+
+// ── State ──────────────────────────────────────────────────────────────────
+let REGULATIONS = [];
 let searchJurisdiction = '';
 let searchCategory = '';
 let qaJurisdiction = '';
 let explorerJurisdiction = '';
-
-const REGULATIONS = [
-  {id:1,title:"Digital Identity Protection Regulation",jurisdiction:"Brazil",category:"GDPR/Data Privacy"},
-  {id:2,title:"Suspicious Activity Disclosure Framework",jurisdiction:"EU",category:"AML/Financial Crime"},
-  {id:3,title:"Climate Risk Transparency Regulation",jurisdiction:"USA",category:"ESG Reporting"},
-  {id:4,title:"Clinical Information Governance Act",jurisdiction:"USA",category:"Healthcare Compliance"},
-  {id:5,title:"Critical Infrastructure Cyber Defense Regulation",jurisdiction:"Brazil",category:"Cybersecurity"},
-  {id:6,title:"Electronic Consent and Retention Framework",jurisdiction:"Kenya",category:"GDPR/Data Privacy"},
-  {id:7,title:"Financial Transaction Monitoring Order",jurisdiction:"EU",category:"AML/Financial Crime"},
-  {id:8,title:"Climate Risk Transparency Regulation",jurisdiction:"EU",category:"ESG Reporting"},
-  {id:9,title:"Clinical Information Governance Act",jurisdiction:"USA",category:"Healthcare Compliance"},
-  {id:10,title:"Network Resilience and Breach Notification Code",jurisdiction:"Kenya",category:"Cybersecurity"},
-  {id:11,title:"Electronic Consent and Retention Framework",jurisdiction:"Brazil",category:"GDPR/Data Privacy"},
-  {id:12,title:"Cross-Institutional AML Governance Act",jurisdiction:"USA",category:"AML/Financial Crime"},
-  {id:13,title:"Environmental Impact Governance Standard",jurisdiction:"Kenya",category:"ESG Reporting"},
-  {id:14,title:"Medical Provider Compliance Directive",jurisdiction:"EU",category:"Healthcare Compliance"},
-  {id:15,title:"Digital Systems Integrity Directive",jurisdiction:"Brazil",category:"Cybersecurity"},
-  {id:16,title:"Cross-Border Personal Information Control Act",jurisdiction:"UK",category:"GDPR/Data Privacy"},
-  {id:17,title:"Anti-Illicit Banking Standards Regulation",jurisdiction:"USA",category:"AML/Financial Crime"},
-  {id:18,title:"Corporate Sustainability Disclosure Code",jurisdiction:"UK",category:"ESG Reporting"},
-  {id:19,title:"Patient Safety and Audit Framework",jurisdiction:"EU",category:"Healthcare Compliance"},
-  {id:20,title:"Enterprise Security Governance Framework",jurisdiction:"EU",category:"Cybersecurity"}
-];
 
 const SAMPLE_QUERIES = [
   "If a company discovers a material breach, what actions are required?",
@@ -384,7 +383,7 @@ const SAMPLE_QUERIES = [
   "What security controls are required for biometric data systems?",
   "What is the incident reporting window for cyber events?",
   "What obligations apply when outsourcing to third parties?",
-  "Is annual independent sustainability disclosure review mandatory?",
+  "Is annual independent review mandatory?",
   "When must suspicious activity reports be filed?",
   "Are offline backup procedures required?"
 ];
@@ -399,6 +398,52 @@ const CAT_CLASSES = {
 
 const J_FLAGS = {Brazil:'🇧🇷',EU:'🇪🇺',Kenya:'🇰🇪',UK:'🇬🇧',USA:'🇺🇸'};
 
+// ── Bootstrap ──────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  checkAPI();
+  await loadRegulations();
+  renderQAQueries();
+  showAllRegulations();
+});
+
+async function checkAPI() {
+  try {
+    const r = await fetch(API+'/');
+    const dot = document.getElementById('api-dot');
+    const txt = document.getElementById('api-status-text');
+    if(r.ok){
+      dot.classList.add('live');
+      txt.textContent = 'API Live';
+    } else {
+      txt.textContent = 'API Error';
+    }
+  } catch(e) {
+    document.getElementById('api-status-text').textContent = 'Offline';
+  }
+}
+
+// ── Data loading ───────────────────────────────────────────────────────────
+async function loadRegulations() {
+  try {
+    const res = await fetch(API+'/regulations');
+    if(!res.ok) throw new Error('failed');
+    const data = await res.json();
+    REGULATIONS = data.regulations || [];
+
+    // Update header stats from /stats endpoint
+    const statsRes = await fetch(API+'/stats');
+    if(statsRes.ok){
+      const stats = await statsRes.json();
+      document.getElementById('h-regs').textContent = stats.total_regulations;
+      document.getElementById('h-vectors').textContent = stats.total_vectors;
+      document.getElementById('h-dims').textContent = stats.dimensions;
+    }
+  } catch(e) {
+    console.error('Failed to load regulations:', e);
+  }
+}
+
+// ── Tab switching ──────────────────────────────────────────────────────────
 function switchTab(name, el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -409,122 +454,221 @@ function switchTab(name, el){
   if(name==='qa') renderQAQueries();
 }
 
+// ── Filter handlers ────────────────────────────────────────────────────────
 function setJurisdiction(j, el){
   searchJurisdiction = j;
-  document.querySelectorAll('.panel#panel-search .j-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#panel-search .j-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  if(document.getElementById('search-input').value.trim()) doSearch();
-  else showAllRegulations();
+  document.getElementById('search-input').value.trim() ? doSearch() : showAllRegulations();
 }
 
 function setCategory(c, el){
   searchCategory = c;
-  document.querySelectorAll('.category-bar .cat-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
-  if(document.getElementById('search-input').value.trim()) doSearch();
-  else showAllRegulations();
+  document.getElementById('search-input').value.trim() ? doSearch() : showAllRegulations();
 }
 
 function setQAJurisdiction(j, el){
   qaJurisdiction = j;
-  document.querySelectorAll('.panel#panel-qa .j-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#panel-qa .j-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
 }
 
 function filterExplorer(j, el){
   explorerJurisdiction = j;
-  document.querySelectorAll('.panel#panel-explorer .j-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#panel-explorer .j-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   renderExplorer();
 }
 
+// ── Search ─────────────────────────────────────────────────────────────────
 async function doSearch(){
   const q = document.getElementById('search-input').value.trim();
   if(!q) return;
   const meta = document.getElementById('search-meta');
   const results = document.getElementById('search-results');
-  meta.textContent = 'Searching...';
-  results.innerHTML = '<div class="loading-state"><span>Retrieving from vector index</span></div>';
-  try{
+  meta.textContent = 'Searching vector index...';
+  results.innerHTML = '<div class="loading-state">Retrieving from Pinecone</div>';
+  try {
     const body = {query:q, top_k:10};
     if(searchJurisdiction) body.jurisdiction = searchJurisdiction;
     const res = await fetch(API+'/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){
+      meta.textContent='';
+      results.innerHTML=`<div style="color:var(--coral);padding:20px;font-size:12px">API error: ${res.status} — check server logs.</div>`;
+      return;
+    }
     const data = await res.json();
     let items = data.results || [];
-    // API handles deduplication by regulation_id
     if(searchCategory) items = items.filter(r=>r.category===searchCategory);
-    meta.innerHTML = `<span>${items.length}</span> regulation${items.length!==1?'s':''} found`;
-    if(!items.length){results.innerHTML='<div style="color:var(--text3);padding:20px;font-size:13px">No regulations found. Try a different query or remove filters.</div>';return;}
+    meta.innerHTML = `<span>${items.length}</span> regulation${items.length!==1?'s':''} matched`;
+    if(!items.length){
+      results.innerHTML='<div style="color:var(--text3);padding:20px;font-size:12px;font-family:IBM Plex Mono,monospace">No results. Try broader terms or remove filters.</div>';
+      return;
+    }
     results.innerHTML = items.map(r=>`
       <div class="reg-card">
         <div class="card-top">
           <span class="card-cat ${CAT_CLASSES[r.category]||''}">${r.category}</span>
           <span class="card-score">${r.score.toFixed(3)}</span>
         </div>
-        <div class="card-title">${r.title}</div>
+        <div class="card-title">${escapeHtml(r.title)}</div>
         <div class="card-meta">
           <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction}</span>
         </div>
-        <div class="card-excerpt">${r.chunk_text}</div>
+        <div class="card-excerpt">${escapeHtml(r.chunk_text)}</div>
       </div>
     `).join('');
-  }catch(e){
+  } catch(e) {
     meta.textContent='';
-    results.innerHTML='<div style="color:var(--coral);padding:20px;font-size:13px">API error. Make sure the FastAPI server is running on port 8000.</div>';
+    results.innerHTML='<div style="color:var(--coral);padding:20px;font-size:12px">API unavailable. Ensure FastAPI is running on port 8000.</div>';
   }
 }
 
+// ── Default regulation cards (no search) ──────────────────────────────────
+async function showAllRegulations(){
+  const meta = document.getElementById('search-meta');
+  const results = document.getElementById('search-results');
+
+  if(!REGULATIONS.length){
+    results.innerHTML = '<div class="loading-state">Loading regulations</div>';
+    await loadRegulations();
+  }
+
+  let items = REGULATIONS;
+  if(searchCategory) items = items.filter(r=>r.category===searchCategory);
+  if(searchJurisdiction) items = items.filter(r=>r.jurisdiction===searchJurisdiction);
+
+  meta.innerHTML = `<span>${items.length}</span> regulation${items.length!==1?'s':''} indexed`;
+
+  // Render cards immediately without excerpts
+  results.innerHTML = items.map(r=>`
+    <div class="reg-card" id="card-${r.id}">
+      <div class="card-top">
+        <span class="card-cat ${CAT_CLASSES[r.category]||''}">${r.category}</span>
+      </div>
+      <div class="card-title">${escapeHtml(r.title)}</div>
+      <div class="card-meta">
+        <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction}</span>
+      </div>
+      <div class="card-excerpt" id="excerpt-${r.id}" style="color:var(--text3);font-size:11px">Loading preview...</div>
+    </div>
+  `).join('');
+
+  // Fetch one representative chunk per regulation via /search
+  // Group by category for efficiency - one call per category
+  const categories = [...new Set(items.map(r=>r.category))];
+  const chunkMap = {};
+
+  await Promise.all(categories.map(async (cat) => {
+    try {
+      const catItems = items.filter(r=>r.category===cat);
+      const body = {query: cat, top_k: 20};
+      if(searchJurisdiction) body.jurisdiction = searchJurisdiction;
+      const res = await fetch(API+'/search', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if(!res.ok) return;
+      const data = await res.json();
+      (data.results||[]).forEach(r => {
+        if(!chunkMap[r.regulation_id]) chunkMap[r.regulation_id] = r.chunk_text;
+      });
+    } catch(e) {}
+  }));
+
+  // Update excerpt for each card
+  items.forEach(r => {
+    const el = document.getElementById(`excerpt-${r.id}`);
+    if(el) {
+      el.style.color = '';
+      el.textContent = chunkMap[r.id] || 'No preview available.';
+    }
+  });
+}
+
+// ── QA ─────────────────────────────────────────────────────────────────────
 function renderQAQueries(){
   const container = document.getElementById('qa-queries');
   container.innerHTML = SAMPLE_QUERIES.map(q=>`
     <button class="qa-query-btn" onclick="askQuestion(this,'${q.replace(/'/g,"\\'")}')">
-      ${q}
+      ${escapeHtml(q)}
     </button>
   `).join('');
 }
 
 async function askQuestion(el, question){
   document.querySelectorAll('.qa-query-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
+  if(el) el.classList.add('active');
   const response = document.getElementById('qa-response');
-  response.innerHTML=`<div class="qa-loading"><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><span style="margin-left:4px">Retrieving from Pinecone and generating answer...</span></div>`;
-  try{
+  response.innerHTML = `<div class="qa-loading"><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><div class="qa-loading-dot"></div><span style="margin-left:6px">Querying Pinecone and generating answer...</span></div>`;
+  try {
     const body = {question, top_k:5};
     if(qaJurisdiction) body.jurisdiction = qaJurisdiction;
     const res = await fetch(API+'/compliance-qa',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok){
+      response.innerHTML=`<div style="color:var(--coral);padding:20px;font-size:12px">API error: ${res.status} — check server logs.</div>`;
+      return;
+    }
     const data = await res.json();
-    const citation = data.citations && data.citations[0];
-    response.innerHTML=`
+    const conf = data.confidence || 0;
+    const isLow = conf > 0 && conf < 0.70;
+
+    response.innerHTML = `
       <div class="qa-question">
-        <div class="qa-q-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <div class="qa-q-text">${question}</div>
+        <div>
+          <div class="qa-q-label">Question</div>
+          <div class="qa-q-text">${escapeHtml(question)}</div>
+        </div>
       </div>
-      <div class="qa-answer">${data.answer || 'No answer generated.'}</div>
-      <div class="qa-verified">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        Verified against indexed regulations &nbsp;·&nbsp; Retrieval similarity: ${(data.confidence * 100).toFixed(1)}%
+      <div class="qa-answer">${escapeHtml(data.answer || 'No answer generated.')}</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        <div class="qa-verified">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Verified against indexed regulations &nbsp;·&nbsp; Similarity: ${(conf*100).toFixed(1)}%
+        </div>
+        ${isLow ? '<div class="qa-low-conf">⚠ Low confidence — refine your query</div>' : ''}
       </div>
       ${data.citations && data.citations.length > 0 ? `
       <div class="qa-citation">
-        <div class="qa-citation-label">Source citations (${data.citations.length} regulation${data.citations.length > 1 ? 's' : ''})</div>
-        ${data.citations.map(c => `
-          <div style="padding:6px 0;border-bottom:1px solid var(--border);last-child:border:none">
-            <div class="qa-citation-text">${c.article_ref || 'General provision'} — <em>${c.title} (${c.jurisdiction})</em> &nbsp;·&nbsp; Score: ${c.score}</div>
+        <div class="qa-citation-label">Source citations (${data.citations.length} regulation${data.citations.length>1?'s':''})</div>
+        ${data.citations.map(c=>`
+          <div class="qa-citation-item">
+            <div class="qa-citation-ref">${escapeHtml(c.article_ref||'General provision')}</div>
+            <div class="qa-citation-title">${escapeHtml(c.title)} &nbsp;<span style="color:var(--text3)">(${c.jurisdiction})</span></div>
+            <div class="qa-citation-score">Score: ${c.score}</div>
           </div>
         `).join('')}
       </div>` : ''}
+      <div class="qa-disclaimer">⚠ This answer requires review and sign-off by a Senior Legal Consultant before use in client deliverables.</div>
     `;
-  }catch(e){
-    response.innerHTML='<div style="color:var(--coral);padding:20px;font-size:13px">API error. Make sure the FastAPI server is running on port 8000.</div>';
+  } catch(e) {
+    response.innerHTML = '<div style="color:var(--coral);padding:20px;font-size:12px">API unavailable. Ensure FastAPI is running.</div>';
   }
 }
 
+function askCustomQuestion(){
+  const input = document.getElementById('qa-custom-input');
+  const question = input.value.trim();
+  if(!question) return;
+  askQuestion(null, question);
+  input.value = '';
+}
+
+// ── Explorer ───────────────────────────────────────────────────────────────
 function renderExplorer(){
   const list = document.getElementById('explorer-list');
+  if(!REGULATIONS.length){
+    list.innerHTML = '<div class="loading-state">Loading</div>';
+    loadRegulations().then(()=>renderExplorer());
+    return;
+  }
   const filtered = explorerJurisdiction ? REGULATIONS.filter(r=>r.jurisdiction===explorerJurisdiction) : REGULATIONS;
   list.innerHTML = filtered.map(r=>`
     <div class="explorer-item" onclick="showDetail(${r.id},this)">
-      <div class="explorer-item-title">${r.title}</div>
+      <div class="explorer-item-title">${escapeHtml(r.title)}</div>
       <div class="explorer-item-meta">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction} &nbsp;·&nbsp; ${r.category}</div>
     </div>
   `).join('');
@@ -535,240 +679,198 @@ async function showDetail(id, el){
   el.classList.add('active');
   const detail = document.getElementById('explorer-detail');
   const reg = REGULATIONS.find(r=>r.id===id);
-  detail.innerHTML=`<div class="loading-state">Loading regulation details...</div>`;
-  try{
+  if(!reg) return;
+  detail.innerHTML = '<div class="loading-state">Generating AI summary</div>';
+  try {
     const res = await fetch(API+'/summarize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({regulation_id:id})});
+    if(!res.ok) throw new Error(`API error: ${res.status}`);
     const data = await res.json();
-    detail.innerHTML=`
+    detail.innerHTML = `
       <div class="detail-header">
-        <div class="detail-title">${data.title}</div>
+        <div class="detail-title">${escapeHtml(data.title)}</div>
         <div class="detail-badges">
           <span class="detail-badge ${CAT_CLASSES[reg.category]||''}">${reg.category}</span>
           <span class="detail-badge" style="background:var(--surface3);color:var(--text2)">${J_FLAGS[reg.jurisdiction]||''} ${reg.jurisdiction}</span>
-          <span class="detail-badge" style="background:var(--surface3);color:var(--text3)">Regulation ID: ${id}</span>
+          <span class="detail-badge" style="background:var(--surface3);color:var(--text3);font-family:IBM Plex Mono,monospace">ID: ${id}</span>
         </div>
       </div>
       <div class="provision">
         <div class="provision-ref">AI Summary</div>
-        <span class="provision-tag" style="background:var(--accent-dim);color:var(--accent)">Generated</span>
-        <div class="provision-text">${data.summary}</div>
+        <span class="provision-tag" style="background:var(--accent-dim);color:var(--accent)">Generated by Phi-3</span>
+        <div class="provision-text">${escapeHtml(data.summary)}</div>
       </div>
     `;
-  }catch(e){
-    detail.innerHTML=`
+  } catch(e) {
+    detail.innerHTML = `
       <div class="detail-header">
-        <div class="detail-title">${reg.title}</div>
+        <div class="detail-title">${escapeHtml(reg.title)}</div>
         <div class="detail-badges">
           <span class="detail-badge ${CAT_CLASSES[reg.category]||''}">${reg.category}</span>
           <span class="detail-badge" style="background:var(--surface3);color:var(--text2)">${J_FLAGS[reg.jurisdiction]||''} ${reg.jurisdiction}</span>
         </div>
       </div>
-      <div style="color:var(--text3);font-size:13px;padding:12px 0">API error loading summary. Make sure FastAPI is running.</div>
+      <div style="color:var(--text3);font-size:12px;padding:12px 0">Summary unavailable. Ensure FastAPI is running.</div>
     `;
   }
 }
 
+// ── Analytics ──────────────────────────────────────────────────────────────
 async function renderAnalytics(){
-  let stats = {total_vectors: 180, total_regulations: 20, jurisdictions: 5, dimensions: 768};
-  let analytics = {
-    total_queries: 0, hallucination_blocked: 0, hallucination_rate: 0,
-    avg_response_time: 0, avg_similarity_score: 0.55
-  };
+  const topEl = document.getElementById('analytics-top');
+  const midEl = document.getElementById('analytics-mid');
+  topEl.innerHTML = '<div class="loading-state" style="grid-column:1/-1">Fetching live data</div>';
+  midEl.innerHTML = '';
+
+  let stats = {total_vectors:0,total_regulations:0,jurisdictions:0,dimensions:0};
+  let analytics = {total_queries:0,hallucination_blocked:0,hallucination_rate:0,avg_response_time:0,avg_similarity_score:0};
+  let evaluation = {available:false,retrieval_at_1:null,retrieval_at_3:null,retrieval_at_5:null,total_cases:0,failed_cases:0};
 
   try {
-    const [statsRes, analyticsRes] = await Promise.all([
+    const [sRes, aRes, eRes] = await Promise.all([
       fetch(API+'/stats'),
-      fetch(API+'/analytics')
+      fetch(API+'/analytics'),
+      fetch(API+'/evaluation-metrics')
     ]);
-    stats     = await statsRes.json();
-    analytics = await analyticsRes.json();
-  } catch(e) {
-    console.error('Analytics fetch failed', e);
-  }
+    if(sRes.ok) stats = await sRes.json();
+    if(aRes.ok) analytics = await aRes.json();
+    if(eRes.ok) evaluation = await eRes.json();
+  } catch(e) { console.error('Analytics fetch failed', e); }
 
-  document.querySelector('.analytics-grid-4').innerHTML = `
+  const halRate = analytics.hallucination_rate || 0;
+  const avgSim = analytics.avg_similarity_score || 0;
+
+  topEl.style.gridTemplateColumns = 'repeat(4,1fr)';
+  topEl.innerHTML = `
     <div class="metric-card">
       <div class="metric-val">${stats.total_regulations}</div>
-      <div class="metric-label">Total regulations</div>
+      <div class="metric-label">Regulations</div>
       <div class="metric-sub">across <span>${stats.jurisdictions} jurisdictions</span></div>
     </div>
     <div class="metric-card">
       <div class="metric-val">${stats.total_vectors}</div>
       <div class="metric-label">Vector chunks</div>
-      <div class="metric-sub"><span>${stats.dimensions}-dim</span> embeddings</div>
+      <div class="metric-sub"><span>${stats.dimensions}-dim</span> legal-bert</div>
     </div>
     <div class="metric-card">
-      <div class="metric-val">${analytics.avg_similarity_score > 0 ? analytics.avg_similarity_score.toFixed(2) : '0.55'}</div>
-      <div class="metric-label">Avg similarity score</div>
+      <div class="metric-val ${avgSim > 0.8 ? 'green' : avgSim > 0.6 ? 'amber' : ''}">${avgSim > 0 ? avgSim.toFixed(3) : '—'}</div>
+      <div class="metric-label">Avg similarity</div>
       <div class="metric-sub">cosine <span>similarity</span></div>
     </div>
     <div class="metric-card">
-      <div class="metric-val">100%</div>
-      <div class="metric-label">Retrieval accuracy</div>
-      <div class="metric-sub">specific <span>query test</span></div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-val">${analytics.avg_response_time > 0 ? analytics.avg_response_time + 's' : 'N/A'}</div>
+      <div class="metric-val">${analytics.avg_response_time > 0 ? analytics.avg_response_time+'s' : '—'}</div>
       <div class="metric-label">Avg response time</div>
       <div class="metric-sub">per <span>compliance query</span></div>
     </div>
-    <div class="metric-card">
-      <div class="metric-val">~5x</div>
-      <div class="metric-label">Speed improvement</div>
-      <div class="metric-sub">vs <span>manual review</span></div>
-    </div>
+  `;
+
+  midEl.style.gridTemplateColumns = 'repeat(3,1fr)';
+  midEl.innerHTML = `
     <div class="metric-card">
       <div class="metric-val">${analytics.total_queries}</div>
       <div class="metric-label">Total queries</div>
       <div class="metric-sub">from <span>query log</span></div>
     </div>
-    <div class="metric-card" style="border-color:${analytics.hallucination_rate > 10 ? 'var(--coral)' : 'var(--border)'}">
-      <div class="metric-val" style="color:${analytics.hallucination_rate > 10 ? 'var(--coral)' : 'var(--accent)'}">
-        ${analytics.hallucination_rate}%
-      </div>
+    <div class="metric-card ${halRate > 10 ? 'alert' : ''}">
+      <div class="metric-val ${halRate > 10 ? 'red' : 'green'}">${halRate}%</div>
       <div class="metric-label">Hallucination rate</div>
       <div class="metric-sub"><span>${analytics.hallucination_blocked}</span> queries blocked</div>
     </div>
+    <div class="metric-card">
+      <div class="metric-val">${analytics.no_match_rate > 0 ? analytics.no_match_rate+'%' : '—'}</div>
+      <div class="metric-label">No match rate</div>
+      <div class="metric-sub">queries with <span>no result</span></div>
+    </div>
   `;
 
-  document.querySelector('.analytics-grid-4').style.gridTemplateColumns = 'repeat(4,1fr)';
+  // Charts from regulations data
+  const jCounts = {};
+  const cCounts = {};
+  REGULATIONS.forEach(r=>{
+    jCounts[r.jurisdiction] = (jCounts[r.jurisdiction]||0)+1;
+    cCounts[r.category] = (cCounts[r.category]||0)+1;
+  });
 
-  const jData = [{label:'EU',count:6,color:'#60a5fa'},{label:'USA',count:5,color:'#fbbf24'},{label:'Brazil',count:4,color:'#4ade80'},{label:'Kenya',count:3,color:'#2dd4bf'},{label:'UK',count:2,color:'#a78bfa'}];
-  const cData = [{label:'Data Privacy',count:4,color:'#60a5fa'},{label:'AML / Financial',count:4,color:'#fbbf24'},{label:'ESG Reporting',count:4,color:'#2dd4bf'},{label:'Healthcare',count:4,color:'#f87171'},{label:'Cybersecurity',count:4,color:'#a78bfa'}];
-  const max = 6;
-  document.getElementById('jurisdiction-chart').innerHTML = jData.map(d=>`
-    <div class="bar-row">
-      <div class="bar-label">${J_FLAGS[d.label]||''} ${d.label}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${(d.count/max)*100}%;background:${d.color}"></div></div>
-      <div class="bar-count">${d.count}</div>
+  const jColors = {Brazil:'#00e5a0',EU:'#4d9fff',Kenya:'#00d4c8',UK:'#b06cff',USA:'#f5a623'};
+  const cColors = {'GDPR/Data Privacy':'#4d9fff','AML/Financial Crime':'#f5a623','ESG Reporting':'#00d4c8','Healthcare Compliance':'#ff5e5e','Cybersecurity':'#b06cff'};
+  const jMax = Math.max(...Object.values(jCounts));
+  const cMax = Math.max(...Object.values(cCounts));
+
+  document.getElementById('jurisdiction-chart').innerHTML =
+    Object.entries(jCounts).sort((a,b)=>b[1]-a[1]).map(([j,n])=>`
+      <div class="bar-row">
+        <div class="bar-label">${J_FLAGS[j]||''} ${j}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(n/jMax)*100}%;background:${jColors[j]||'var(--accent)'}"></div></div>
+        <div class="bar-count">${n}</div>
+      </div>
+    `).join('');
+
+  document.getElementById('category-chart').innerHTML =
+    Object.entries(cCounts).map(([c,n])=>`
+      <div class="pie-row">
+        <div class="pie-dot" style="background:${cColors[c]||'var(--accent)'}"></div>
+        <div class="pie-name">${c}</div>
+        <div class="pie-pct">${n} regs</div>
+      </div>
+    `).join('');
+
+  // Retrieval accuracy panel - honest metrics
+  document.getElementById('accuracy-chart').innerHTML = evaluation.available ? `
+    <div style="margin-bottom:12px">
+      <div class="accuracy-row">
+        <div class="accuracy-label">Retrieval@1</div>
+        <div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_1}%"></div></div>
+          <div class="accuracy-val">${evaluation.retrieval_at_1}%</div>
+        </div>
+      </div>
+      <div class="accuracy-row">
+        <div class="accuracy-label">Retrieval@3</div>
+        <div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_3}%"></div></div>
+          <div class="accuracy-val">${evaluation.retrieval_at_3}%</div>
+        </div>
+      </div>
+      <div class="accuracy-row">
+        <div class="accuracy-label">Retrieval@5</div>
+        <div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_5}%"></div></div>
+          <div class="accuracy-val">${evaluation.retrieval_at_5}%</div>
+        </div>
+      </div>
     </div>
-  `).join('');
-  document.getElementById('category-chart').innerHTML = cData.map(d=>`
-    <div class="pie-row">
-      <div class="pie-dot" style="background:${d.color}"></div>
-      <div class="pie-name">${d.label}</div>
-      <div class="pie-pct">${d.count} regs</div>
+    <div style="font-size:9px;color:var(--text3);line-height:1.6;font-family:IBM Plex Mono,monospace;border-top:1px solid var(--border);padding-top:10px">
+      ${evaluation.total_cases} test cases evaluated.<br>
+      ${evaluation.failed_cases} failed at @5.<br>
+      Dataset: synthetic, 20 regulations, 9 clauses each.
     </div>
-  `).join('');
+  ` : `
+    <div style="color:var(--text3);font-size:11px;padding:12px 0;font-family:IBM Plex Mono,monospace">
+      No evaluation data available.<br>Run the evaluator to generate metrics.
+    </div>
+  `;
 }
 
-// Check API health
-fetch(API+'/').then(r=>{
-  if(r.ok) document.getElementById('api-status').style.color='var(--accent)';
-}).catch(()=>{
-  document.getElementById('api-status').style.color='var(--coral)';
-});
-
-fetch(API+'/stats').then(r=>r.json()).then(d=>{
-  const el = document.getElementById('vector-count');
-  if(el) el.textContent = d.total_vectors;
-}).catch(()=>{});
-
-// Initial search
-document.getElementById('search-input').addEventListener('keydown', e=>{
-  if(e.key==='Enter') doSearch();
-});
-
-// Load initial search
-window.addEventListener('load',()=>{
-  renderQAQueries();
-  showAllRegulations();
-});
+// ── Utilities ──────────────────────────────────────────────────────────────
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
 
 function toggleTheme(){
-    const root = document.documentElement;
-    const btn = document.getElementById('theme-toggle');
-    if(root.classList.contains('light-mode')){
-        root.classList.remove('light-mode');
-        btn.textContent = '☀ Light';
-    } else {
-        root.classList.add('light-mode');
-        btn.textContent = '☾ Dark';
-    }
-}
-
-const CATEGORY_QUERIES = {
-  'GDPR/Data Privacy': 'lawful basis personal information processing',
-  'AML/Financial Crime': 'suspicious activity reports financial intelligence',
-  'ESG Reporting': 'sustainability disclosures environmental incidents',
-  'Healthcare Compliance': 'patient treatment records biometric authentication',
-  'Cybersecurity': 'cyber incidents vulnerability assessment'
-};
-
-function askCustomQuestion(){
-  const input = document.getElementById('qa-custom-input');
-  const question = input.value.trim();
-  if(!question) return;
-  // Create a temporary button element to reuse askQuestion
-  const tempBtn = document.createElement('button');
-  askQuestion(tempBtn, question);
-  input.value = '';
-}
-
-async function showAllRegulations(){
-  const meta = document.getElementById('search-meta');
-  const results = document.getElementById('search-results');
-
-  let items = REGULATIONS;
-  if(searchCategory) items = items.filter(r => r.category === searchCategory);
-  if(searchJurisdiction) items = items.filter(r => r.jurisdiction === searchJurisdiction);
-
-  meta.innerHTML = `<span>${items.length}</span> regulation${items.length !== 1 ? 's' : ''} found`;
-  results.innerHTML = '<div class="loading-state"><span>Loading regulations...</span></div>';
-
-  try {
-    // Fetch first article chunk for each regulation directly
-    const chunkMap = {};
-    const jurisdictions = [...new Set(items.map(r => r.jurisdiction))];
-
-    await Promise.all(jurisdictions.map(async (j) => {
-      const jRegs = items.filter(r => r.jurisdiction === j);
-      for(const reg of jRegs){
-        try {
-          const res = await fetch(API+'/search', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              query: CATEGORY_QUERIES[reg.category] || reg.category,
-              jurisdiction: j,
-              top_k: 20
-            })
-          });
-          const data = await res.json();
-          const match = (data.results || []).find(r => r.regulation_id === reg.id);
-          if(match) chunkMap[reg.id] = match.chunk_text;
-        } catch(e) {}
-      }
-    }));
-
-    results.innerHTML = items.map(r => `
-      <div class="reg-card">
-        <div class="card-top">
-          <span class="card-cat ${CAT_CLASSES[r.category] || ''}">${r.category}</span>
-        </div>
-        <div class="card-title">${r.title}</div>
-        <div class="card-meta">
-          <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction] || ''} ${r.jurisdiction}</span>
-        </div>
-        <div class="card-excerpt">${chunkMap[r.id] || 'No preview available.'}</div>
-      </div>
-    `).join('');
-
-  } catch(e) {
-    results.innerHTML = items.map(r => `
-      <div class="reg-card">
-        <div class="card-top">
-          <span class="card-cat ${CAT_CLASSES[r.category] || ''}">${r.category}</span>
-        </div>
-        <div class="card-title">${r.title}</div>
-        <div class="card-meta">
-          <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction] || ''} ${r.jurisdiction}</span>
-        </div>
-      </div>
-    `).join('');
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  if(root.classList.contains('light')){
+    root.classList.remove('light');
+    btn.textContent = '☀ Light';
+  } else {
+    root.classList.add('light');
+    btn.textContent = '☾ Dark';
   }
 }
 
+document.getElementById('search-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') doSearch();
+});
 </script>
 </body>
 </html>

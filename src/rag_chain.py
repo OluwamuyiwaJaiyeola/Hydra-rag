@@ -34,11 +34,7 @@ def detect_category_prefix(query: str) -> str:
     'money laundering', 'transaction', 'financial intelligence',
     'due diligence', 'reporting threshold',
     'records retained', 'records be retained', 'retain records',
-    'how long must', 'retention period',
-    'maximum fine', 'civil penalties', 'license suspension',
-    'twelve million', 'repeated reporting', 'reporting failures',
-    'fine for violations', 'maximum fine for violations',
-    'penalties for violations', 'fines for violations'
+    'how long must', 'retention period'
     ]):
         return f"AML/Financial Crime: {query}"  
     if any(w in query_lower for w in [
