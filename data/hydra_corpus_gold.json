@@ -1,0 +1,503 @@
+[
+  {
+    "chunk_id": "DP:Article_1.1",
+    "family": "GDPR/Data Privacy",
+    "family_code": "DP",
+    "article_ref": "Article 1.1",
+    "text": "Article 1.1. Organizations processing personal information shall maintain a lawful basis register identifying consent, contractual necessity, or statutory authorization for each processing activity.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      1,
+      6,
+      11,
+      16
+    ]
+  },
+  {
+    "chunk_id": "DP:Article_2.3",
+    "family": "GDPR/Data Privacy",
+    "family_code": "DP",
+    "article_ref": "Article 2.3",
+    "text": "Article 2.3. Data controllers shall notify supervisory authorities of material data breaches within seventy-two hours of detection and maintain a documented incident response log.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      1,
+      6,
+      11,
+      16
+    ]
+  },
+  {
+    "chunk_id": "DP:Article_3.2",
+    "family": "GDPR/Data Privacy",
+    "family_code": "DP",
+    "article_ref": "Article 3.2",
+    "text": "Article 3.2. Personal information retained beyond twenty-four months shall be subject to quarterly review and documented retention justification.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      1,
+      6,
+      11,
+      16
+    ]
+  },
+  {
+    "chunk_id": "DP:Article_4.5",
+    "family": "GDPR/Data Privacy",
+    "family_code": "DP",
+    "article_ref": "Article 4.5",
+    "text": "Article 4.5. Entities transferring personal information outside the jurisdiction shall conduct transfer impact assessments and maintain encryption controls.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      1,
+      6,
+      11,
+      16
+    ]
+  },
+  {
+    "chunk_id": "DP:Article_5.1",
+    "family": "GDPR/Data Privacy",
+    "family_code": "DP",
+    "article_ref": "Article 5.1",
+    "text": "Article 5.1. Administrative penalties for negligent processing may reach five percent of annual regional turnover or the equivalent of ten million compliance units.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      1,
+      6,
+      11,
+      16
+    ]
+  },
+  {
+    "chunk_id": "AML:Section_1.2",
+    "family": "AML/Financial Crime",
+    "family_code": "AML",
+    "article_ref": "Section 1.2",
+    "text": "Section 1.2. Financial institutions shall apply enhanced due diligence to transactions exceeding the prescribed reporting threshold.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      2,
+      7,
+      12,
+      17
+    ]
+  },
+  {
+    "chunk_id": "AML:Section_2.1",
+    "family": "AML/Financial Crime",
+    "family_code": "AML",
+    "article_ref": "Section 2.1",
+    "text": "Section 2.1. Suspicious activity reports shall be submitted to the Financial Intelligence Authority within five business days of internal escalation.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      2,
+      7,
+      12,
+      17
+    ]
+  },
+  {
+    "chunk_id": "AML:Section_3.4",
+    "family": "AML/Financial Crime",
+    "family_code": "AML",
+    "article_ref": "Section 3.4",
+    "text": "Section 3.4. Institutions shall retain customer identity records and transaction logs for a minimum of seven years.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      2,
+      7,
+      12,
+      17
+    ]
+  },
+  {
+    "chunk_id": "AML:Section_4.2",
+    "family": "AML/Financial Crime",
+    "family_code": "AML",
+    "article_ref": "Section 4.2",
+    "text": "Section 4.2. Automated monitoring systems shall be calibrated quarterly to identify structuring, sanctions evasion, and layered transfers.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      2,
+      7,
+      12,
+      17
+    ]
+  },
+  {
+    "chunk_id": "AML:Section_5.7",
+    "family": "AML/Financial Crime",
+    "family_code": "AML",
+    "article_ref": "Section 5.7",
+    "text": "Section 5.7. Civil penalties for repeated reporting failures may include license suspension and fines up to twelve million compliance units.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      2,
+      7,
+      12,
+      17
+    ]
+  },
+  {
+    "chunk_id": "ESG:Clause_1.1",
+    "family": "ESG Reporting",
+    "family_code": "ESG",
+    "article_ref": "Clause 1.1",
+    "text": "Clause 1.1. Covered enterprises shall publish annual sustainability disclosures verified by an independent assurance provider.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      3,
+      8,
+      13,
+      18
+    ]
+  },
+  {
+    "chunk_id": "ESG:Clause_2.4",
+    "family": "ESG Reporting",
+    "family_code": "ESG",
+    "article_ref": "Clause 2.4",
+    "text": "Clause 2.4. Carbon intensity calculations shall be measured using operational control methodology and documented estimation assumptions.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      3,
+      8,
+      13,
+      18
+    ]
+  },
+  {
+    "chunk_id": "ESG:Clause_3.2",
+    "family": "ESG Reporting",
+    "family_code": "ESG",
+    "article_ref": "Clause 3.2",
+    "text": "Clause 3.2. Supply chain labor practices shall be reviewed annually through risk-based assessments.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      3,
+      8,
+      13,
+      18
+    ]
+  },
+  {
+    "chunk_id": "ESG:Clause_4.6",
+    "family": "ESG Reporting",
+    "family_code": "ESG",
+    "article_ref": "Clause 4.6",
+    "text": "Clause 4.6. Material environmental incidents shall be disclosed to the competent authority within fifteen calendar days.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      3,
+      8,
+      13,
+      18
+    ]
+  },
+  {
+    "chunk_id": "ESG:Clause_5.3",
+    "family": "ESG Reporting",
+    "family_code": "ESG",
+    "article_ref": "Clause 5.3",
+    "text": "Clause 5.3. Failure to submit complete disclosures may result in trading restrictions and administrative sanctions.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      3,
+      8,
+      13,
+      18
+    ]
+  },
+  {
+    "chunk_id": "HC:Provision_1.3",
+    "family": "Healthcare Compliance",
+    "family_code": "HC",
+    "article_ref": "Provision 1.3",
+    "text": "Provision 1.3. Healthcare operators shall maintain patient treatment records in tamper-evident digital repositories.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      4,
+      9,
+      14,
+      19
+    ]
+  },
+  {
+    "chunk_id": "HC:Provision_2.5",
+    "family": "Healthcare Compliance",
+    "family_code": "HC",
+    "article_ref": "Provision 2.5",
+    "text": "Provision 2.5. Unauthorized disclosure of patient information shall trigger mandatory internal review within forty-eight hours.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      4,
+      9,
+      14,
+      19
+    ]
+  },
+  {
+    "chunk_id": "HC:Provision_3.1",
+    "family": "Healthcare Compliance",
+    "family_code": "HC",
+    "article_ref": "Provision 3.1",
+    "text": "Provision 3.1. Clinical systems processing biometric information shall implement multifactor authentication for all privileged accounts.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      4,
+      9,
+      14,
+      19
+    ]
+  },
+  {
+    "chunk_id": "HC:Provision_4.4",
+    "family": "Healthcare Compliance",
+    "family_code": "HC",
+    "article_ref": "Provision 4.4",
+    "text": "Provision 4.4. Hospitals shall conduct semiannual compliance training for administrative and clinical personnel.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      4,
+      9,
+      14,
+      19
+    ]
+  },
+  {
+    "chunk_id": "HC:Provision_5.6",
+    "family": "Healthcare Compliance",
+    "family_code": "HC",
+    "article_ref": "Provision 5.6",
+    "text": "Provision 5.6. Repeated non-compliance may result in accreditation suspension and monetary penalties.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      4,
+      9,
+      14,
+      19
+    ]
+  },
+  {
+    "chunk_id": "CYB:Rule_1.1",
+    "family": "Cybersecurity",
+    "family_code": "CYB",
+    "article_ref": "Rule 1.1",
+    "text": "Rule 1.1. Operators of critical systems shall maintain continuous vulnerability assessment and remediation programs.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      5,
+      10,
+      15,
+      20
+    ]
+  },
+  {
+    "chunk_id": "CYB:Rule_2.8",
+    "family": "Cybersecurity",
+    "family_code": "CYB",
+    "article_ref": "Rule 2.8",
+    "text": "Rule 2.8. Material cyber incidents affecting essential services shall be reported within twenty-four hours of confirmation.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      5,
+      10,
+      15,
+      20
+    ]
+  },
+  {
+    "chunk_id": "CYB:Rule_3.5",
+    "family": "Cybersecurity",
+    "family_code": "CYB",
+    "article_ref": "Rule 3.5",
+    "text": "Rule 3.5. Organizations shall maintain offline backup procedures tested at least once every six months.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      5,
+      10,
+      15,
+      20
+    ]
+  },
+  {
+    "chunk_id": "CYB:Rule_4.2",
+    "family": "Cybersecurity",
+    "family_code": "CYB",
+    "article_ref": "Rule 4.2",
+    "text": "Rule 4.2. Third-party vendors with network access shall be subject to annual security assessments and contractual safeguards.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      5,
+      10,
+      15,
+      20
+    ]
+  },
+  {
+    "chunk_id": "CYB:Rule_5.9",
+    "family": "Cybersecurity",
+    "family_code": "CYB",
+    "article_ref": "Rule 5.9",
+    "text": "Rule 5.9. Regulators may impose corrective directives and fines for failure to implement reasonable security measures.",
+    "scope": "family",
+    "covered_regulation_ids": [
+      5,
+      10,
+      15,
+      20
+    ]
+  },
+  {
+    "chunk_id": "SHARED:Section_4.1",
+    "family": "ALL",
+    "family_code": "SHARED",
+    "article_ref": "Section 4.1",
+    "text": "Section 4.1. Independent reviews shall be conducted annually, and any material weaknesses identified during internal or external assessments shall be remediated within ninety calendar days unless an extension is authorized by the supervisory authority.",
+    "scope": "shared",
+    "covered_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "chunk_id": "SHARED:Section_4.2",
+    "family": "ALL",
+    "family_code": "SHARED",
+    "article_ref": "Section 4.2",
+    "text": "Section 4.2. Entities engaging third-party service providers shall ensure contractual clauses require equivalent compliance standards, audit rights, and incident escalation procedures.",
+    "scope": "shared",
+    "covered_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "chunk_id": "SHARED:Section_4.3",
+    "family": "ALL",
+    "family_code": "SHARED",
+    "article_ref": "Section 4.3",
+    "text": "Section 4.3. All remediation plans shall include implementation timelines, executive accountability assignments, and measurable control objectives. Regulators may issue corrective orders, impose operational restrictions, apply enhanced monitoring, or impose monetary sanctions on entities that fail to meet remediation deadlines.",
+    "scope": "shared",
+    "covered_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "chunk_id": "SHARED:Section_4.4",
+    "family": "ALL",
+    "family_code": "SHARED",
+    "article_ref": "Section 4.4",
+    "text": "Section 4.4. This Regulation shall enter into force one hundred and twenty days after publication in the official register. Transitional compliance measures may be granted for entities demonstrating substantial implementation progress.",
+    "scope": "shared",
+    "covered_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  },
+  {
+    "chunk_id": "SHARED:Section_4.5",
+    "family": "ALL",
+    "family_code": "SHARED",
+    "article_ref": "Section 4.5",
+    "text": "Section 4.5. Entities shall cooperate fully with lawful inspection requests and provide requested records within ten business days.",
+    "scope": "shared",
+    "covered_regulation_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "_note": "Restored from original regulations; dropped during cleaning. Records-cooperation obligation."
+  }
+]

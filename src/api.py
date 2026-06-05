@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from src.rag_chain import retrieve_chunks, format_context, detect_category_prefix
+from src.rag_chain import retrieve_chunks, format_context, embed_query
 from src.config import HUGGINGFACE_MODEL
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
@@ -14,7 +14,7 @@ import json as _json
 import os
 
 logging.basicConfig(
-    filename="hydra_queries.log",
+    filename="logs/hydra_queries.log",
     level=logging.INFO,
     format="%(asctime)s - %(message)s"
 )
@@ -31,6 +31,56 @@ REGULATIONS = [
     for r in _raw
 ]
 
+# Lookup: which jurisdictions (and which family) carry each clause. Built from the
+# index records, the authoritative map of clause -> regulations. Used to tell the
+# user a clause is multi-jurisdictional instead of arbitrarily naming one copy.
+import json as _json_boot
+CHUNK_JURISDICTIONS = {}   # chunk_id -> sorted list of jurisdictions
+CHUNK_FAMILY = {}          # chunk_id -> family/category name
+_DEFINING_CLAUSE = {}      # regulation_id -> its unique family clause (for previews)
+try:
+    with open("data/hydra_index_records.json") as _irf:
+        for _rec in _json_boot.load(_irf):
+            _cid = _rec["chunk_id"]
+            CHUNK_JURISDICTIONS.setdefault(_cid, set()).add(_rec["jurisdiction"])
+            CHUNK_FAMILY[_cid] = _rec.get("category") or _rec.get("family")
+            # the defining clause is the regulation's FAMILY-scope clause, not the
+            # shared Section 4.x boilerplate that is identical across all regs
+            if _rec.get("scope") == "family" and _rec["regulation_id"] not in _DEFINING_CLAUSE:
+                _DEFINING_CLAUSE[_rec["regulation_id"]] = _rec["text"]
+    CHUNK_JURISDICTIONS = {k: sorted(v) for k, v in CHUNK_JURISDICTIONS.items()}
+
+    # For each regulation, find the chunk_id of its defining (family) clause, then
+    # list every jurisdiction that shares that clause. This lets the UI label a card
+    # honestly: "shared across N jurisdictions in this family" rather than looking
+    # like accidental duplication.
+    _REG_DEFINING_CHUNK = {}
+    with open("data/hydra_index_records.json") as _irf2:
+        for _rec in _json_boot.load(_irf2):
+            if _rec.get("scope") == "family" and _rec["regulation_id"] not in _REG_DEFINING_CHUNK:
+                _REG_DEFINING_CHUNK[_rec["regulation_id"]] = _rec["chunk_id"]
+
+    for _r in REGULATIONS:
+        _r["defining_clause"] = _DEFINING_CLAUSE.get(_r["id"], "")
+        _chunk = _REG_DEFINING_CHUNK.get(_r["id"])
+        _r["family_jurisdictions"] = CHUNK_JURISDICTIONS.get(_chunk, []) if _chunk else []
+except FileNotFoundError:
+    pass  # enrichment unavailable; responses still work
+
+# Complete set of country/nationality terms that are NOT indexed jurisdictions.
+# Generated from the full ISO country list (pycountry) minus the five indexed
+# jurisdictions and their aliases. This replaces a hand-maintained partial list,
+# which leaked: any unlisted country (e.g. Fiji) slipped through and got answered
+# with clauses from indexed jurisdictions. With the complete list, the allowlist
+# (Brazil/EU/Kenya/UK/USA) is the only thing that passes; every other country is
+# refused.
+UNINDEXED_COUNTRY_TERMS = set()
+try:
+    with open("data/unindexed_countries.json") as _ucf:
+        UNINDEXED_COUNTRY_TERMS = set(_json_boot.load(_ucf))
+except FileNotFoundError:
+    pass  # falls back to allowlist-only check; see guard below
+
 app = FastAPI(
     title="Hydra Analytics Compliance Intelligence API",
     description="AI-powered regulatory compliance search and Q&A platform",
@@ -46,6 +96,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from fastapi.responses import RedirectResponse
+
+@app.get("/")
+def root():
+    return RedirectResponse(url="/app")
 
 # Load models once at startup, not per request
 embedding_model = SentenceTransformer(HUGGINGFACE_MODEL)
@@ -77,6 +133,9 @@ class QueryResponse(BaseModel):
     citations: list[Citation]
     regulation_ids: list[int]
     confidence: float = 0.0
+    confidence_calibrated: float = 0.0   # 0-1, mapped from BGE's score band for UI thresholding
+    source_family: Optional[str] = None          # e.g. "GDPR/Data Privacy"
+    applies_to_jurisdictions: list[str] = []      # all jurisdictions carrying the cited clause
 
 class SearchRequest(BaseModel):
     query: str
@@ -123,9 +182,78 @@ def compliance_qa(request: QueryRequest):
     start_time = time.time()
 
     try:
-        filter_dict = None
-        if request.jurisdiction:
-            filter_dict = {"jurisdiction": {"$eq": request.jurisdiction}}
+        # Resolve the jurisdiction filter. Priority: explicit request field first,
+        # otherwise auto-detect from the question text. Naming a jurisdiction in the
+        # question ("...under the EU regulation") narrows retrieval to that
+        # jurisdiction's vectors, which is what makes near-duplicate clauses across
+        # jurisdictions distinguishable (unfiltered ~0.57 vs filtered 1.0 on the
+        # jurisdiction tier; identical clause text, only metadata differs).
+        _JURISDICTION_TERMS = {
+            'kenya': 'Kenya', 'eu': 'EU', 'european union': 'EU',
+            'brazil': 'Brazil', 'uk': 'UK', 'united kingdom': 'UK',
+            'usa': 'USA', 'united states': 'USA', 'america': 'USA',
+        }
+        _q_lower = request.question.lower()
+        detected_jurisdiction = None
+        for _term, _jname in _JURISDICTION_TERMS.items():
+            if _term in _q_lower:
+                detected_jurisdiction = _jname
+                break
+
+        active_jurisdiction = request.jurisdiction or detected_jurisdiction
+
+        # ── Out-of-scope jurisdiction guard (runs BEFORE retrieval and the penalty
+        # handler, so an unindexed jurisdiction cannot slip through and get answered
+        # with clauses from indexed ones). The rule is INVERTED: the five indexed
+        # jurisdictions are the allowlist; any other named country is refused. The
+        # country set is the COMPLETE ISO list (loaded at startup) minus the indexed
+        # five, so there are no gaps, Fiji, Bhutan, anything unlisted is caught.
+        INDEXED = {'Brazil', 'EU', 'Kenya', 'UK', 'USA'}
+        # Normalize the query: strip punctuation so a trailing "?" or "." cannot
+        # defeat the match (e.g. "...in Fiji?" must still match the token "fiji").
+        # Surround with spaces so token checks are word-boundary safe.
+        _q_norm = ' ' + ' '.join(re.sub(r'[^a-z0-9 ]+', ' ', _q_lower).split()) + ' '
+        named_unindexed = any((' ' + tok + ' ') in _q_norm for tok in UNINDEXED_COUNTRY_TERMS)
+        out_of_scope = (
+            (active_jurisdiction is not None and active_jurisdiction not in INDEXED)
+            or (named_unindexed and active_jurisdiction is None)
+        )
+        if out_of_scope:
+            elapsed = round(time.time() - start_time, 3)
+            logging.info(f"query='{request.question}' result=out_of_scope_jurisdiction elapsed={elapsed}s")
+            return QueryResponse(
+                question=request.question,
+                answer="That jurisdiction is not currently indexed in the Hydra Analytics platform. Current coverage is limited to Brazil, EU, Kenya, UK, and USA. Please rephrase your question for one of these jurisdictions.",
+                citations=[], regulation_ids=[], confidence=0.0
+            )
+
+        # Detect a regulatory domain named in the question, so retrieval can be
+        # constrained to that family. "fine for DATA PRIVACY violation" must not
+        # surface AML or cyber penalties. Single source of truth, reused by the
+        # penalty handler below.
+        _DOMAIN_TERMS = {
+            'data privacy': 'GDPR/Data Privacy', 'data protection': 'GDPR/Data Privacy',
+            'gdpr': 'GDPR/Data Privacy',
+            'aml': 'AML/Financial Crime', 'money laundering': 'AML/Financial Crime',
+            'financial crime': 'AML/Financial Crime',
+            'esg': 'ESG Reporting', 'environmental': 'ESG Reporting',
+            'sustainability': 'ESG Reporting', 'climate': 'ESG Reporting',
+            'healthcare': 'Healthcare Compliance', 'clinical': 'Healthcare Compliance',
+            'patient': 'Healthcare Compliance', 'biometric': 'Healthcare Compliance',
+            'cyber': 'Cybersecurity', 'cybersecurity': 'Cybersecurity',
+        }
+        detected_domain = None
+        for _term, _fam in _DOMAIN_TERMS.items():
+            if _term in _q_lower:
+                detected_domain = _fam
+                break
+
+        filter_dict = {}
+        if active_jurisdiction:
+            filter_dict["jurisdiction"] = {"$eq": active_jurisdiction}
+        if detected_domain:
+            filter_dict["category"] = {"$eq": detected_domain}
+        filter_dict = filter_dict or None
 
         # Use retrieve_chunks which includes deduplication
         matches = retrieve_chunks(
@@ -151,16 +279,23 @@ def compliance_qa(request: QueryRequest):
             )
 
         confidence = round(matches[0]["score"], 4)
+        # Calibrated confidence. Raw BGE cosine for correct rank-1 retrievals on this
+        # corpus sits roughly in 0.55-0.78. A frontend thresholding raw cosine at,
+        # say, 0.7 wrongly flags correct answers as "low confidence". Map BGE's
+        # observed band to a 0-1 scale so the warning fires only on genuinely weak
+        # retrieval. Linear map: <=0.45 -> 0, >=0.75 -> 1.
+        _lo, _hi = 0.45, 0.75
+        confidence_calibrated = round(min(1.0, max(0.0, (matches[0]["score"] - _lo) / (_hi - _lo))), 4)
 
         # Define question_lower early - used by multiple blocks below
         question_lower = request.question.lower()
 
-        detected = detect_category_prefix(request.question)
-        if ':' in detected:
-            cat = detected.split(':')[0].strip()
-            cat_matches = [m for m in matches if m['metadata'].get('category') == cat]
-            if len(cat_matches) >= 2:
-                matches = cat_matches
+        # NOTE: an earlier majority-category narrowing block was REMOVED here.
+        # It took the plurality category among the top matches and discarded the
+        # rest, which threw away correct rank-1 results when lower-ranked noise
+        # happened to share a category (e.g. a #1 AML clause discarded because two
+        # cyber clauses sat at #2 and #5). Raw retrieval already ranks the correct
+        # clause first; we trust the ranking and do not second-guess it by category.
 
         context = format_context(matches)
 
@@ -173,6 +308,7 @@ def compliance_qa(request: QueryRequest):
             'what are the penalties', 'fine for violations',
             'penalties for violations', 'what penalties'
         ]
+        # Detected domain is computed before retrieval (single source of truth).
         is_broad_penalty = (
             any(s in question_lower for s in PENALTY_SIGNALS)
             and not request.jurisdiction
@@ -185,6 +321,12 @@ def compliance_qa(request: QueryRequest):
                 m for m in matches
                 if any(kw in m['metadata'].get('chunk_text', '').lower() for kw in penalty_keywords)
             ]
+            # If the question named a domain, keep only that family's penalty clauses.
+            if detected_domain:
+                domain_chunks = [m for m in penalty_chunks
+                                 if m['metadata'].get('category') == detected_domain]
+                if domain_chunks:
+                    penalty_chunks = domain_chunks
             if len(penalty_chunks) >= 2:
                 parts = []
                 seen_refs = set()
@@ -223,17 +365,9 @@ def compliance_qa(request: QueryRequest):
                     )
         # ── End penalty handler ────────────────────────────────────────────
 
-        # Detect if user asked about a specific jurisdiction
-        jurisdiction_mentions = {
-            'kenya': 'Kenya', 'eu': 'EU', 'european union': 'EU',
-            'brazil': 'Brazil', 'uk': 'UK', 'united kingdom': 'UK',
-            'usa': 'USA', 'united states': 'USA', 'america': 'USA',
-        }
-        asked_jurisdiction = None
-        for term, jname in jurisdiction_mentions.items():
-            if term in question_lower:
-                asked_jurisdiction = jname
-                break
+        # Reuse the jurisdiction detected before retrieval (single source of truth).
+        # active_jurisdiction reflects an explicit request field OR text detection.
+        asked_jurisdiction = active_jurisdiction
         retrieved_jurisdictions = list(set([m["metadata"]["jurisdiction"] for m in matches]))
         jurisdiction_mismatch = (
             asked_jurisdiction and
@@ -241,32 +375,14 @@ def compliance_qa(request: QueryRequest):
         )
 
 
-        # Hallucination guard: detect fictional regulations and unknown jurisdictions
+        # Hallucination guard: fictional/non-existent named regulations. (Out-of-scope
+        # JURISDICTIONS are already handled by the early guard above, before retrieval.)
         FICTIONAL_REGULATIONS = ['hydra compliance directive', 'hydra directive']
-        OUT_OF_SCOPE_JURISDICTIONS = [
-            'australia', 'australian', 'canada', 'canadian',
-            'india', 'indian', 'china', 'chinese',
-            'japan', 'japanese', 'singapore',
-            'new zealand', 'south africa',
-        ]
-
         is_fictional_regulation = any(
             f' {signal} ' in f' {question_lower} ' or
             question_lower.startswith(signal) or
             question_lower.endswith(signal)
             for signal in FICTIONAL_REGULATIONS
-        )
-
-        is_out_of_scope = any(
-            f' {signal} ' in f' {question_lower} ' or
-            question_lower.startswith(signal) or
-            question_lower.endswith(signal)
-            for signal in OUT_OF_SCOPE_JURISDICTIONS
-        )
-
-        is_unknown_jurisdiction = (
-            asked_jurisdiction and
-            asked_jurisdiction not in {'Brazil', 'EU', 'Kenya', 'UK', 'USA'}
         )
 
         if is_fictional_regulation:
@@ -275,16 +391,6 @@ def compliance_qa(request: QueryRequest):
             return QueryResponse(
                 question=request.question,
                 answer="The regulation referenced in your query does not exist in the indexed database. The Hydra Analytics platform covers regulations for Brazil, EU, Kenya, UK, and USA only.",
-                citations=[], regulation_ids=[], confidence=0.0
-            )
-
-        if is_out_of_scope or is_unknown_jurisdiction:
-            elapsed = round(time.time() - start_time, 3)
-            logging.info(f"query='{request.question}' result=out_of_scope elapsed={elapsed}s")
-            jurisdiction_name = asked_jurisdiction or "this jurisdiction"
-            return QueryResponse(
-                question=request.question,
-                answer=f"{jurisdiction_name} is not currently indexed in the Hydra Analytics platform. Current coverage: Brazil, EU, Kenya, UK, and USA.",
                 citations=[], regulation_ids=[], confidence=0.0
             )
 
@@ -343,9 +449,13 @@ ANSWER:"""
             for m in matches
         ]
 
-        # Extract article references from the generated answer
+        # Extract article references from the generated answer.
+        # Non-capturing group so findall returns the FULL ref ("Section 3.4"),
+        # not just the keyword ("Section"). The grouped version returned only
+        # "Section", which then substring-matched every "Section x.y" clause and
+        # attached unrelated citations.
         answer_refs = re.findall(
-            r'(Article|Section|Clause|Provision|Rule)\s+[\d\.]+',
+            r'(?:Article|Section|Clause|Provision|Rule)\s+\d+(?:\.\d+)*',
             answer,
             re.IGNORECASE
         )
@@ -358,10 +468,13 @@ ANSWER:"""
                 if used_ref in seen_refs:
                     continue
                 seen_refs.add(used_ref)
-                matching = [c for c in citations if used_ref in c.article_ref.lower()]
+                matching = [c for c in citations if used_ref == c.article_ref.lower()]
+                if not matching:
+                    # fall back to prefix match only if no exact match exists
+                    matching = [c for c in citations if c.article_ref.lower().startswith(used_ref)]
                 if matching and asked_jurisdiction:
                     jurisdiction_match = [c for c in matching if c.jurisdiction == asked_jurisdiction]
-                    display_citations.extend(jurisdiction_match if jurisdiction_match else matching[:1])
+                    display_citations.extend((jurisdiction_match or matching)[:1])
                 elif matching:
                     display_citations.extend(matching[:1])
             if not display_citations:
@@ -377,12 +490,48 @@ ANSWER:"""
             f"elapsed={elapsed}s"
         )
 
+        # regulation_ids must reflect what the user actually sees in citations,
+        # not the raw retrieved set. Building it from `matches` previously leaked
+        # unfiltered, duplicated reg IDs (e.g. [6,10,6,6,13] for a Kenya-filtered
+        # query). Derive it from display_citations, order-preserving dedup.
+        _seen_reg = set()
+        _reg_ids = []
+        for c in display_citations:
+            if c.regulation_id not in _seen_reg:
+                _seen_reg.add(c.regulation_id)
+                _reg_ids.append(c.regulation_id)
+
+        # Multi-jurisdiction enrichment. For the primary cited clause, look up every
+        # jurisdiction that carries it. When no specific jurisdiction was asked and
+        # the clause spans several, this tells the user the obligation is shared
+        # rather than implying the one arbitrarily-highest-scoring copy is special.
+        source_family = None
+        applies_to = []
+        if display_citations:
+            primary = display_citations[0]
+            # find the chunk_id of the primary citation via the retrieved matches
+            primary_chunk_id = None
+            for m in matches:
+                if (m["metadata"].get("article_ref", "").lower() == primary.article_ref.lower()
+                        and int(m["metadata"]["regulation_id"]) == primary.regulation_id):
+                    primary_chunk_id = m["metadata"].get("chunk_id")
+                    break
+            if primary_chunk_id:
+                applies_to = CHUNK_JURISDICTIONS.get(primary_chunk_id, [])
+                source_family = CHUNK_FAMILY.get(primary_chunk_id)
+            # if a jurisdiction was explicitly asked/detected, scope the display to it
+            if asked_jurisdiction and asked_jurisdiction in applies_to:
+                applies_to = [asked_jurisdiction]
+
         return QueryResponse(
             question=request.question,
             answer=answer,
             citations=display_citations,
-            regulation_ids=[int(m["metadata"]["regulation_id"]) for m in matches],
-            confidence=confidence
+            regulation_ids=_reg_ids,
+            confidence=confidence,
+            confidence_calibrated=confidence_calibrated,
+            source_family=source_family,
+            applies_to_jurisdictions=applies_to,
         )
 
     except Exception as e:
@@ -400,11 +549,8 @@ def semantic_search(request: SearchRequest):
         if request.jurisdiction:
             filter_dict = {"jurisdiction": {"$eq": request.jurisdiction}}
         
-        prefixed_query = detect_category_prefix(request.query)
-        query_vector = embedding_model.encode(
-            prefixed_query,
-            normalize_embeddings=True
-        ).tolist()
+        # BGE query embedding (instruction prefix applied inside embed_query).
+        query_vector = embed_query(request.query, embedding_model)
 
         raw_results = index.query(
             vector=query_vector,
@@ -422,21 +568,11 @@ def semantic_search(request: SearchRequest):
             if reg_id not in seen_reg_ids:
                 seen_reg_ids.add(reg_id)
                 deduplicated.append(m)
-        # Cap after category filtering, not before
-        # If query has a detectable category, filter results to that category
-        detected_prefix = detect_category_prefix(request.query)
-        if ':' in detected_prefix:
-            detected_category = detected_prefix.split(':')[0].strip()
-            category_filtered = [m for m in deduplicated if m["metadata"].get("category") == detected_category]
-            if len(category_filtered) >= 2:
-                deduplicated = category_filtered[:request.top_k or 10]
-            elif len(category_filtered) == 1:
-                others = [m for m in deduplicated if m["metadata"].get("category") != detected_category]
-                deduplicated = (category_filtered + others)[:request.top_k or 10]
-            else:
-                deduplicated = deduplicated[:request.top_k or 10]
-        else:
-            deduplicated = deduplicated[:request.top_k or 10]
+        # Cap to top_k. Earlier code narrowed by plurality category here too; removed
+        # for the same reason as /compliance-qa (it discarded correct rank-1 results).
+        # The ranking is trusted as-is.
+        topk = request.top_k or 10
+        deduplicated = deduplicated[:topk]
 
         results = [
             SearchResult(
@@ -464,10 +600,9 @@ def semantic_search(request: SearchRequest):
 @app.post("/summarize", response_model=SummarizeResponse)
 def summarize_regulation(request: SummarizeRequest):
     try:
-        dummy_vector = embedding_model.encode(
-            f"regulation {request.regulation_id}",
-            normalize_embeddings=True
-        ).tolist()
+        # Pure metadata fetch: the filter does the work, the vector only needs to be
+        # valid. Use embed_query for consistency with the rest of the pipeline.
+        dummy_vector = embed_query(f"regulation {request.regulation_id}", embedding_model)
         results = index.query(
             vector=dummy_vector,
             top_k=100,
@@ -552,7 +687,7 @@ def get_analytics():
         response_times = []
         similarity_scores = []
 
-        with open("hydra_queries.log", "r") as f:
+        with open("logs/hydra_queries.log", "r") as f:
             for line in f:
                 if "query='" not in line:
                     continue
@@ -606,24 +741,26 @@ def get_evaluation_metrics():
         if not os.path.exists(metrics_path):
             return {
                 "available": False,
-                "message": "No evaluation metrics available yet.",
-                "retrieval_at_1": None,
-                "retrieval_at_3": None,
-                "retrieval_at_5": None,
-                "citation_accuracy": None,
-                "total_cases": 0,
-                "failed_cases": 0
+                "message": "No evaluation metrics available yet. Run the scope-split test to populate.",
+                "family": None,
+                "shared": None,
+                "jurisdiction": None,
             }
         with open(metrics_path) as f:
             metrics = _json.load(f)
+
+        # Scope-split metrics: report each tier separately, never averaged.
+        # family = primary signal (4-reg valid sets)
+        # shared = near-trivial sanity check (valid across all 20 regs)
+        # jurisdiction = hard metadata disambiguation
         return {
             "available": True,
-            "retrieval_at_1": metrics.get("retrieval_at_1"),
-            "retrieval_at_3": metrics.get("retrieval_at_3"),
-            "retrieval_at_5": metrics.get("retrieval_at_5"),
-            "citation_accuracy": metrics.get("citation_accuracy"),
-            "total_cases": metrics.get("total_cases", 0),
-            "failed_cases": metrics.get("failed_cases", 0)
+            "model": metrics.get("model"),
+            "family": metrics.get("family"),
+            "shared": metrics.get("shared"),
+            "jurisdiction": metrics.get("jurisdiction"),
+            "jurisdiction_filtered": metrics.get("jurisdiction_filtered"),
+            "notes": metrics.get("notes"),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

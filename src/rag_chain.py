@@ -1,5 +1,4 @@
 import warnings
-import re
 warnings.filterwarnings("ignore")
 
 from sentence_transformers import SentenceTransformer
@@ -10,62 +9,41 @@ from src.config import (
     HUGGINGFACE_MODEL
 )
 
+# BGE retrieval instruction. BGE was trained with this exact query-side prefix;
+# passages are embedded WITHOUT a prefix (see ingest.py). Using it is not optional,
+# it is how the model was trained to separate query space from passage space.
+BGE_QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
+
 
 def get_pinecone_index():
     pc = Pinecone(api_key=PINECONE_API_KEY)
     return pc.Index(PINECONE_INDEX_NAME)
 
 
-def detect_category_prefix(query: str) -> str:
+def embed_query(query: str, model: SentenceTransformer) -> list:
     """
-    Add category context to query before embedding.
-    Matches the prefix format used during ingestion so legal-bert
-    can distinguish between compliance domains correctly.
+    Embed a query with the BGE instruction prefix.
+
+    NOTE: the old detect_category_prefix() keyword router was removed. It hand-mapped
+    query words to a domain string and effectively hardcoded retrieval routing, which
+    inflates scores and is not a real retriever. Domain disambiguation now comes from
+    the embedding model plus optional metadata filters (e.g. jurisdiction), not from
+    keyword rules.
     """
-    query_lower = query.lower()
-    if any(w in query_lower for w in [
-        'data breach', 'material breach', 'breach notification',
-        'data protection', 'privacy', 'gdpr',
-        'personal information', 'data controllers', 'incident response'
-    ]):
-        return f"GDPR/Data Privacy: {query}"
-    if any(w in query_lower for w in [
-    'suspicious activity', 'aml', 'financial crime',
-    'money laundering', 'transaction', 'financial intelligence',
-    'due diligence', 'reporting threshold',
-    'records retained', 'records be retained', 'retain records',
-    'how long must', 'retention period'
-    ]):
-        return f"AML/Financial Crime: {query}"  
-    if any(w in query_lower for w in [
-    'environmental', 'climate', 'esg', 'sustainability',
-    'carbon', 'supply chain', 'disclosure',
-    'annual independent review', 'independent review',
-    'annual review', 'mandatory review',
-    'independent assurance', 'annually reviewed'
-    ]):
-        return f"ESG Reporting: {query}"
-    if any(w in query_lower for w in [
-        'biometric', 'patient', 'healthcare', 'clinical',
-        'hospital', 'medical', 'health'
-    ]):
-        return f"Healthcare Compliance: {query}"
-    if any(w in query_lower for w in [
-        'cyber', 'backup', 'vulnerability', 'network',
-        'incident reporting', 'critical infrastructure', 'security controls'
-    ]):
-        return f"Cybersecurity: {query}"
-    return query
+    text = BGE_QUERY_PREFIX + query
+    return model.encode(text, normalize_embeddings=True).tolist()
 
 
 def retrieve_chunks(query: str, index, model, top_k: int = 5, filter_dict: dict = None) -> list:
     """
-    Retrieve top-k unique regulation chunks for a query.
-    Applies category prefix to query before embedding to improve
-    legal-bert domain matching accuracy.
+    Retrieve top-k UNIQUE clauses for a query.
+
+    Stored vectors are one-per-(clause, jurisdiction), so the same clause can appear
+    multiple times. We over-fetch, then deduplicate by chunk_id keeping the highest
+    score per clause. This is the dedup-at-scoring pattern: the index stays faithful
+    and filterable, the result list stays clean.
     """
-    prefixed_query = detect_category_prefix(query)
-    query_vector = model.encode(prefixed_query, normalize_embeddings=True).tolist()
+    query_vector = embed_query(query, model)
 
     raw_results = index.query(
         vector=query_vector,
@@ -73,29 +51,27 @@ def retrieve_chunks(query: str, index, model, top_k: int = 5, filter_dict: dict 
         include_metadata=True,
         filter=filter_dict
     )
-    
     matches = raw_results["matches"]
 
-    # Deduplicate by chunk_text keeping highest score per unique clause
-    seen_texts = set()
+    seen_chunks = set()
     deduplicated = []
     for m in matches:
-        key = m["metadata"].get("chunk_text", "")[:80]
-        if key not in seen_texts:
-            seen_texts.add(key)
+        key = m["metadata"].get("chunk_id") or m["metadata"].get("chunk_text", "")[:80]
+        if key not in seen_chunks:
+            seen_chunks.add(key)
             deduplicated.append(m)
         if len(deduplicated) >= top_k:
             break
 
-    # Apply relevance threshold
-    RELEVANCE_THRESHOLD = 0.65
+    # Relevance threshold. BGE cosine scores run lower than a keyword-prefixed setup,
+    # so 0.65 is too aggressive and will return empty. Tune on real data; start lower.
+    RELEVANCE_THRESHOLD = 0.45
     filtered = [m for m in deduplicated if m["score"] >= RELEVANCE_THRESHOLD]
 
-    return filtered if filtered else []
+    return filtered if filtered else deduplicated[:top_k]
 
 
 def format_context(matches: list) -> str:
-    """Format retrieved chunks into a readable context string for the LLM."""
     context_parts = []
     for match in matches:
         meta = match["metadata"]
@@ -109,7 +85,6 @@ def format_context(matches: list) -> str:
 
 
 def build_prompt(context: str, question: str) -> str:
-    """Build the prompt sent to Phi-3 for answer generation."""
     return f"""You are a regulatory compliance expert. Read the regulation text below and answer the question.
 Rules:
 1. Answer in one clear sentence

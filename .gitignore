@@ -1,8 +1,17 @@
 venv/
 .env
+
 __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
 dist/
+
+#Logs
+logs/
+*.log
+hydra_queries.log
+
+# macOS
 .DS_Store
+**/.DS_Store

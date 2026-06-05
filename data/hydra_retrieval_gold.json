@@ -1,0 +1,1613 @@
+{
+  "family_and_shared": [
+    {
+      "source": "compliance_questions",
+      "query_id": 1,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "scenario",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 1,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 2,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "scenario",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 1,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 4,
+      "query_text": "What authority receives mandatory breach notifications?",
+      "category": "factual",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 2,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 6,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "scenario",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 3,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 7,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "scenario",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 4,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 8,
+      "query_text": "Is annual independent review mandatory under this regulation?",
+      "category": "binary",
+      "detected_topic": "annual_review",
+      "original_target_regulation_id": 4,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.1"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 10,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "scenario",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 5,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 11,
+      "query_text": "Is annual independent review mandatory under this regulation?",
+      "category": "binary",
+      "detected_topic": "annual_review",
+      "original_target_regulation_id": 6,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.1"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 14,
+      "query_text": "Must entities provide records within ten business days when requested?",
+      "category": "binary",
+      "detected_topic": "outsourcing_records",
+      "original_target_regulation_id": 7,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.5"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 15,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "scenario",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 8,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 16,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "scenario",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 8,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 19,
+      "query_text": "Is employee compliance training required?",
+      "category": "binary",
+      "detected_topic": "hc_training",
+      "original_target_regulation_id": 10,
+      "gold_chunk_ids": [
+        "HC:Provision_4.4"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 22,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "scenario",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 11,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 23,
+      "query_text": "Is annual independent review mandatory under this regulation?",
+      "category": "binary",
+      "detected_topic": "annual_review",
+      "original_target_regulation_id": 12,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.1"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 24,
+      "query_text": "If a healthcare operator stores biometric data, what controls are required?",
+      "category": "scenario",
+      "detected_topic": "biometric_mfa",
+      "original_target_regulation_id": 12,
+      "gold_chunk_ids": [
+        "HC:Provision_3.1"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 25,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "scenario",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 13,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 26,
+      "query_text": "Can regulators impose operational restrictions for repeated violations?",
+      "category": "binary",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 13,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 27,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "scenario",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 14,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 30,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "scenario",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 15,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 31,
+      "query_text": "Can regulators impose operational restrictions for repeated violations?",
+      "category": "binary",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 16,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 35,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "scenario",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 18,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 36,
+      "query_text": "Can regulators impose operational restrictions for repeated violations?",
+      "category": "binary",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 18,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 39,
+      "query_text": "Are organizations permitted to transfer regulated information without safeguards?",
+      "category": "binary",
+      "detected_topic": "cross_border",
+      "original_target_regulation_id": 20,
+      "gold_chunk_ids": [
+        "DP:Article_4.5"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 45,
+      "query_text": "How long must records be retained under the regulation?",
+      "category": "factual",
+      "detected_topic": "records_7yr",
+      "original_target_regulation_id": 11,
+      "gold_chunk_ids": [
+        "AML:Section_3.4"
+      ],
+      "valid_regulation_ids": [
+        2,
+        7,
+        12,
+        17
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 46,
+      "query_text": "Is employee compliance training required?",
+      "category": "binary",
+      "detected_topic": "hc_training",
+      "original_target_regulation_id": 14,
+      "gold_chunk_ids": [
+        "HC:Provision_4.4"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 47,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "scenario",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 1,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "compliance_questions",
+      "query_id": 50,
+      "query_text": "Must entities provide records within ten business days when requested?",
+      "category": "binary",
+      "detected_topic": "outsourcing_records",
+      "original_target_regulation_id": 7,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.5"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 1,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "rag_factual",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 1,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 2,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "rag_factual",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 1,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 4,
+      "query_text": "What authority receives mandatory breach notifications?",
+      "category": "rag_factual",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 2,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 7,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "rag_factual",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 3,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 11,
+      "query_text": "Is annual independent review mandatory under this regulation?",
+      "category": "rag_factual",
+      "detected_topic": "annual_review",
+      "original_target_regulation_id": 5,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.1"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 14,
+      "query_text": "Must entities provide records within ten business days when requested?",
+      "category": "rag_factual",
+      "detected_topic": "outsourcing_records",
+      "original_target_regulation_id": 6,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.5"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 16,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "rag_factual",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 7,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 22,
+      "query_text": "If a company discovers a material breach, what actions are required?",
+      "category": "rag_factual",
+      "detected_topic": "breach_72hrs",
+      "original_target_regulation_id": 9,
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 24,
+      "query_text": "If a healthcare operator stores biometric data, what controls are required?",
+      "category": "rag_factual",
+      "detected_topic": "biometric_mfa",
+      "original_target_regulation_id": 10,
+      "gold_chunk_ids": [
+        "HC:Provision_3.1"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 27,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "rag_factual",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 11,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 30,
+      "query_text": "If an institution outsources services to a third party, what compliance obligations remain?",
+      "category": "rag_factual",
+      "detected_topic": "outsourcing",
+      "original_target_regulation_id": 12,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.2"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "rag_test",
+      "query_id": 47,
+      "query_text": "If a regulated entity fails to meet remediation deadlines, what may regulators do?",
+      "category": "rag_factual",
+      "detected_topic": "remediation",
+      "original_target_regulation_id": 16,
+      "gold_chunk_ids": [
+        "SHARED:Section_4.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "scope": "shared",
+      "difficulty": "easy_shared"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1001,
+      "query_text": "What is the maximum administrative penalty for negligent personal data processing?",
+      "category": "factual_disambiguated",
+      "detected_topic": "penalty_DP",
+      "family": "GDPR/Data Privacy",
+      "gold_chunk_ids": [
+        "DP:Article_5.1"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1002,
+      "query_text": "What civil penalties apply for repeated financial-crime reporting failures?",
+      "category": "factual_disambiguated",
+      "detected_topic": "penalty_AML",
+      "family": "AML/Financial Crime",
+      "gold_chunk_ids": [
+        "AML:Section_5.7"
+      ],
+      "valid_regulation_ids": [
+        2,
+        7,
+        12,
+        17
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1003,
+      "query_text": "What sanctions apply for failing to submit complete sustainability disclosures?",
+      "category": "factual_disambiguated",
+      "detected_topic": "penalty_ESG",
+      "family": "ESG Reporting",
+      "gold_chunk_ids": [
+        "ESG:Clause_5.3"
+      ],
+      "valid_regulation_ids": [
+        3,
+        8,
+        13,
+        18
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1004,
+      "query_text": "What penalties apply for repeated healthcare compliance failures?",
+      "category": "factual_disambiguated",
+      "detected_topic": "penalty_HC",
+      "family": "Healthcare Compliance",
+      "gold_chunk_ids": [
+        "HC:Provision_5.6"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1005,
+      "query_text": "What penalties may regulators impose for inadequate cybersecurity measures?",
+      "category": "factual_disambiguated",
+      "detected_topic": "penalty_CYB",
+      "family": "Cybersecurity",
+      "gold_chunk_ids": [
+        "CYB:Rule_5.9"
+      ],
+      "valid_regulation_ids": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1006,
+      "query_text": "What is the reporting deadline for a material personal data breach?",
+      "category": "factual_disambiguated",
+      "detected_topic": "incident_DP",
+      "family": "GDPR/Data Privacy",
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "valid_regulation_ids": [
+        1,
+        6,
+        11,
+        16
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1007,
+      "query_text": "What is the disclosure deadline for a material environmental incident?",
+      "category": "factual_disambiguated",
+      "detected_topic": "incident_ESG",
+      "family": "ESG Reporting",
+      "gold_chunk_ids": [
+        "ESG:Clause_4.6"
+      ],
+      "valid_regulation_ids": [
+        3,
+        8,
+        13,
+        18
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1008,
+      "query_text": "What is the reporting deadline for a material cyber incident?",
+      "category": "factual_disambiguated",
+      "detected_topic": "incident_CYB",
+      "family": "Cybersecurity",
+      "gold_chunk_ids": [
+        "CYB:Rule_2.8"
+      ],
+      "valid_regulation_ids": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    },
+    {
+      "source": "disambiguated",
+      "query_id": 1009,
+      "query_text": "What is the deadline to review an unauthorized disclosure of patient information?",
+      "category": "factual_disambiguated",
+      "detected_topic": "incident_HC",
+      "family": "Healthcare Compliance",
+      "gold_chunk_ids": [
+        "HC:Provision_2.5"
+      ],
+      "valid_regulation_ids": [
+        4,
+        9,
+        14,
+        19
+      ],
+      "scope": "family",
+      "difficulty": "medium_family"
+    }
+  ],
+  "hard_jurisdiction": [
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1010,
+      "query_text": "Under the Brazil data privacy regulation, what is the breach notification deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "breach_72hrs",
+      "family": "GDPR/Data Privacy",
+      "jurisdiction": "Brazil",
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "gold_regulation_ids": [
+        1,
+        11
+      ],
+      "valid_regulation_ids": [
+        1,
+        11
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1011,
+      "query_text": "Under the Kenya data privacy regulation, what is the breach notification deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "breach_72hrs",
+      "family": "GDPR/Data Privacy",
+      "jurisdiction": "Kenya",
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "gold_regulation_ids": [
+        6
+      ],
+      "valid_regulation_ids": [
+        6
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1012,
+      "query_text": "Under the UK data privacy regulation, what is the breach notification deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "breach_72hrs",
+      "family": "GDPR/Data Privacy",
+      "jurisdiction": "UK",
+      "gold_chunk_ids": [
+        "DP:Article_2.3"
+      ],
+      "gold_regulation_ids": [
+        16
+      ],
+      "valid_regulation_ids": [
+        16
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1013,
+      "query_text": "Under the EU financial crime regulation, how long must customer records be retained?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "records_7yr",
+      "family": "AML/Financial Crime",
+      "jurisdiction": "EU",
+      "gold_chunk_ids": [
+        "AML:Section_3.4"
+      ],
+      "gold_regulation_ids": [
+        2,
+        7
+      ],
+      "valid_regulation_ids": [
+        2,
+        7
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1014,
+      "query_text": "Under the USA financial crime regulation, how long must customer records be retained?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "records_7yr",
+      "family": "AML/Financial Crime",
+      "jurisdiction": "USA",
+      "gold_chunk_ids": [
+        "AML:Section_3.4"
+      ],
+      "gold_regulation_ids": [
+        12,
+        17
+      ],
+      "valid_regulation_ids": [
+        12,
+        17
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1015,
+      "query_text": "Under the EU ESG regulation, what is the environmental incident disclosure deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "env_incident_15d",
+      "family": "ESG Reporting",
+      "jurisdiction": "EU",
+      "gold_chunk_ids": [
+        "ESG:Clause_4.6"
+      ],
+      "gold_regulation_ids": [
+        8
+      ],
+      "valid_regulation_ids": [
+        8
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1016,
+      "query_text": "Under the Kenya ESG regulation, what is the environmental incident disclosure deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "env_incident_15d",
+      "family": "ESG Reporting",
+      "jurisdiction": "Kenya",
+      "gold_chunk_ids": [
+        "ESG:Clause_4.6"
+      ],
+      "gold_regulation_ids": [
+        13
+      ],
+      "valid_regulation_ids": [
+        13
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1017,
+      "query_text": "Under the UK ESG regulation, what is the environmental incident disclosure deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "env_incident_15d",
+      "family": "ESG Reporting",
+      "jurisdiction": "UK",
+      "gold_chunk_ids": [
+        "ESG:Clause_4.6"
+      ],
+      "gold_regulation_ids": [
+        18
+      ],
+      "valid_regulation_ids": [
+        18
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1018,
+      "query_text": "Under the USA ESG regulation, what is the environmental incident disclosure deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "env_incident_15d",
+      "family": "ESG Reporting",
+      "jurisdiction": "USA",
+      "gold_chunk_ids": [
+        "ESG:Clause_4.6"
+      ],
+      "gold_regulation_ids": [
+        3
+      ],
+      "valid_regulation_ids": [
+        3
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1019,
+      "query_text": "Under the EU healthcare regulation, what controls are required for biometric systems?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "biometric_mfa",
+      "family": "Healthcare Compliance",
+      "jurisdiction": "EU",
+      "gold_chunk_ids": [
+        "HC:Provision_3.1"
+      ],
+      "gold_regulation_ids": [
+        14,
+        19
+      ],
+      "valid_regulation_ids": [
+        14,
+        19
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1020,
+      "query_text": "Under the USA healthcare regulation, what controls are required for biometric systems?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "biometric_mfa",
+      "family": "Healthcare Compliance",
+      "jurisdiction": "USA",
+      "gold_chunk_ids": [
+        "HC:Provision_3.1"
+      ],
+      "gold_regulation_ids": [
+        4,
+        9
+      ],
+      "valid_regulation_ids": [
+        4,
+        9
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1021,
+      "query_text": "Under the Brazil cybersecurity regulation, what is the cyber incident reporting deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "cyber_incident_24h",
+      "family": "Cybersecurity",
+      "jurisdiction": "Brazil",
+      "gold_chunk_ids": [
+        "CYB:Rule_2.8"
+      ],
+      "gold_regulation_ids": [
+        5,
+        15
+      ],
+      "valid_regulation_ids": [
+        5,
+        15
+      ],
+      "is_uniquely_identifying": false,
+      "scope": "jurisdiction_pair",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1022,
+      "query_text": "Under the EU cybersecurity regulation, what is the cyber incident reporting deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "cyber_incident_24h",
+      "family": "Cybersecurity",
+      "jurisdiction": "EU",
+      "gold_chunk_ids": [
+        "CYB:Rule_2.8"
+      ],
+      "gold_regulation_ids": [
+        20
+      ],
+      "valid_regulation_ids": [
+        20
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    },
+    {
+      "source": "hard_jurisdiction",
+      "query_id": 1023,
+      "query_text": "Under the Kenya cybersecurity regulation, what is the cyber incident reporting deadline?",
+      "category": "factual_jurisdiction",
+      "detected_topic": "cyber_incident_24h",
+      "family": "Cybersecurity",
+      "jurisdiction": "Kenya",
+      "gold_chunk_ids": [
+        "CYB:Rule_2.8"
+      ],
+      "gold_regulation_ids": [
+        10
+      ],
+      "valid_regulation_ids": [
+        10
+      ],
+      "is_uniquely_identifying": true,
+      "scope": "jurisdiction_exact",
+      "difficulty": "hard_jurisdiction",
+      "requires": "metadata_filter_or_jurisdiction_aware_retrieval"
+    }
+  ],
+  "scoring_notes": {
+    "family": "hit = any chunk in gold_chunk_ids retrieved; valid across 4 regs",
+    "shared": "hit = shared chunk retrieved; valid across all 20 regs; report SEPARATELY, near-free",
+    "jurisdiction_exact": "hit = the single gold reg retrieved; (family,jurisdiction) is unique here",
+    "jurisdiction_pair": "hit = any of the 2 gold regs; (family,jurisdiction) maps to 2 regs, still tests duplicate disambiguation",
+    "headline_metric": "report Retrieval@k separately for family, shared, jurisdiction_exact; do NOT average across scopes"
+  }
+}

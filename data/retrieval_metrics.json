@@ -1,74 +1,34 @@
 {
-  "retrieval_at_1": 73.7,
-  "retrieval_at_3": 73.7,
-  "retrieval_at_5": 78.9,
-  "citation_accuracy": null,
-  "total_cases": 19,
-  "failed_cases": 4,
-  "failures": [
-    {
-      "query": "If a company discovers a material breach, what actions are r",
-      "expected_any_of": [
-        1,
-        6,
-        11,
-        16
-      ],
-      "retrieved": [
-        9,
-        4,
-        13,
-        20,
-        8
-      ]
-    },
-    {
-      "query": "What authority receives mandatory breach notifications?",
-      "expected_any_of": [
-        1,
-        6,
-        11,
-        16
-      ],
-      "retrieved": [
-        19,
-        14,
-        9,
-        4,
-        14
-      ]
-    },
-    {
-      "query": "If a company discovers a material breach, what actions are r",
-      "expected_any_of": [
-        1,
-        6,
-        11,
-        16
-      ],
-      "retrieved": [
-        9,
-        4,
-        13,
-        20,
-        8
-      ]
-    },
-    {
-      "query": "If a company discovers a material breach, what actions are r",
-      "expected_any_of": [
-        1,
-        6,
-        11,
-        16
-      ],
-      "retrieved": [
-        9,
-        4,
-        13,
-        20,
-        8
-      ]
-    }
-  ]
+  "model": "BAAI/bge-base-en-v1.5",
+  "family": {
+    "R@1": 0.48,
+    "R@3": 1.0,
+    "R@5": 1.0,
+    "n": 25
+  },
+  "shared": {
+    "R@1": 0.696,
+    "R@3": 0.87,
+    "R@5": 1.0,
+    "n": 23
+  },
+  "jurisdiction": {
+    "R@1": 0.571,
+    "R@3": 0.571,
+    "R@5": 0.571,
+    "n": 14
+  },
+  "jurisdiction_filtered": {
+    "R@1": 1.0,
+    "R@3": 1.0,
+    "R@5": 1.0,
+    "n": 14
+  },
+  "notes": {
+    "family": "valid across 4 regs; primary signal",
+    "shared": "valid across all 20 regs; near-trivial, sanity check only",
+    "jurisdiction": "raw semantics, no filter; cannot disambiguate identical clause text across jurisdictions",
+    "jurisdiction_filtered": "metadata filter applied (the engineered path); this is what the live API does",
+    "scoring": "tiers reported separately, never averaged"
+  }
 }

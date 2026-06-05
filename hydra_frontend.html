@@ -109,6 +109,7 @@ body>*{position:relative;z-index:1}
 .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.4;font-family:'Syne',sans-serif}
 .card-meta{display:flex;gap:10px;margin-bottom:8px}
 .card-jurisdiction{font-size:11px;color:var(--text3)}
+.card-shared-note{margin-top:8px;font-size:9px;color:var(--text3);background:var(--surface3);border-radius:var(--r);padding:5px 8px;line-height:1.4;font-family:'IBM Plex Mono',monospace;opacity:0.75}
 .card-excerpt{font-size:11px;color:var(--text2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 /* QA */
@@ -130,6 +131,8 @@ body>*{position:relative;z-index:1}
 .qa-verified svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.5}
 .qa-low-conf{display:inline-flex;align-items:center;gap:5px;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);color:var(--amber);font-size:10px;padding:3px 10px;border-radius:20px;margin-bottom:14px;font-weight:500;font-family:'IBM Plex Mono',monospace;margin-left:8px}
 .qa-citation{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-top:4px}
+.qa-source-family{font-size:11px;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;margin-bottom:12px}
+.qa-sf-label{color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;font-size:9px;font-weight:600;font-family:'IBM Plex Mono',monospace}
 .qa-citation-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:600;font-family:'IBM Plex Mono',monospace}
 .qa-citation-item{padding:6px 0;border-bottom:1px solid var(--border)}
 .qa-citation-item:last-child{border-bottom:none;padding-bottom:0}
@@ -553,38 +556,22 @@ async function showAllRegulations(){
         <span class="card-jurisdiction">${J_FLAGS[r.jurisdiction]||''} ${r.jurisdiction}</span>
       </div>
       <div class="card-excerpt" id="excerpt-${r.id}" style="color:var(--text3);font-size:11px">Loading preview...</div>
+      ${r.family_jurisdictions && r.family_jurisdictions.length > 1 ? `
+      <div class="card-shared-note">↔ Shared clause — identical across ${r.family_jurisdictions.length} jurisdictions in this family (${r.family_jurisdictions.join(', ')}). Differentiated by jurisdiction metadata, not clause text.</div>` : ''}
     </div>
   `).join('');
 
-  // Fetch one representative chunk per regulation via /search
-  // Group by category for efficiency - one call per category
-  const categories = [...new Set(items.map(r=>r.category))];
-  const chunkMap = {};
-
-  await Promise.all(categories.map(async (cat) => {
-    try {
-      const catItems = items.filter(r=>r.category===cat);
-      const body = {query: cat, top_k: 20};
-      if(searchJurisdiction) body.jurisdiction = searchJurisdiction;
-      const res = await fetch(API+'/search', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(body)
-      });
-      if(!res.ok) return;
-      const data = await res.json();
-      (data.results||[]).forEach(r => {
-        if(!chunkMap[r.regulation_id]) chunkMap[r.regulation_id] = r.chunk_text;
-      });
-    } catch(e) {}
-  }));
-
-  // Update excerpt for each card
+  // Show each regulation's DEFINING clause (its unique family clause), served by
+  // /regulations. Previously this ran a semantic search per category and assigned
+  // whichever chunk ranked first, which was non-deterministic (previews changed on
+  // refresh) and often surfaced the shared Section 4.x boilerplate that is identical
+  // across all 20 regulations (every card showing the same text). The defining
+  // clause is stable and unique per regulation.
   items.forEach(r => {
     const el = document.getElementById(`excerpt-${r.id}`);
     if(el) {
       el.style.color = '';
-      el.textContent = chunkMap[r.id] || 'No preview available.';
+      el.textContent = r.defining_clause || 'No preview available.';
     }
   });
 }
@@ -614,7 +601,17 @@ async function askQuestion(el, question){
     }
     const data = await res.json();
     const conf = data.confidence || 0;
-    const isLow = conf > 0 && conf < 0.70;
+    // Use the calibrated 0-1 confidence for the warning band. Raw BGE cosine for
+    // correct rank-1 answers sits ~0.55-0.78, so thresholding raw cosine flagged
+    // correct answers as "low". Calibrated maps BGE's band to 0-1.
+    // Low-confidence warning on raw cosine. Correct BGE retrievals on this corpus
+    // sit ~0.51-0.78, so the warning fires below 0.50 to flag genuinely weak
+    // retrieval without false-flagging correct answers in the 0.51-0.65 range.
+    const isLow = conf > 0 && conf < 0.50;
+    // A refusal (out-of-scope jurisdiction, fictional regulation, no match) returns
+    // confidence 0 and no citations. In that case the "Verified / Similarity" badge
+    // is misleading, so suppress it.
+    const isRefusal = conf === 0 && (!data.citations || data.citations.length === 0);
 
     response.innerHTML = `
       <div class="qa-question">
@@ -624,13 +621,21 @@ async function askQuestion(el, question){
         </div>
       </div>
       <div class="qa-answer">${escapeHtml(data.answer || 'No answer generated.')}</div>
+      ${data.source_family && data.applies_to_jurisdictions && data.applies_to_jurisdictions.length > 0 ? `
+      <div class="qa-source-family">
+        <span class="qa-sf-label">Source family:</span> ${escapeHtml(data.source_family)}
+        &nbsp;·&nbsp;
+        <span class="qa-sf-label">Jurisdiction${data.applies_to_jurisdictions.length>1?'s':''}:</span>
+        ${data.applies_to_jurisdictions.map(j=>`${J_FLAGS[j]||''} ${escapeHtml(j)}`).join(', ')}
+      </div>` : ''}
+      ${!isRefusal ? `
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:14px">
         <div class="qa-verified">
           <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           Verified against indexed regulations &nbsp;·&nbsp; Similarity: ${(conf*100).toFixed(1)}%
         </div>
         ${isLow ? '<div class="qa-low-conf">⚠ Low confidence — refine your query</div>' : ''}
-      </div>
+      </div>` : ''}
       ${data.citations && data.citations.length > 0 ? `
       <div class="qa-citation">
         <div class="qa-citation-label">Source citations (${data.citations.length} regulation${data.citations.length>1?'s':''})</div>
@@ -642,7 +647,7 @@ async function askQuestion(el, question){
           </div>
         `).join('')}
       </div>` : ''}
-      <div class="qa-disclaimer">⚠ This answer requires review and sign-off by a Senior Legal Consultant before use in client deliverables.</div>
+      <div class="qa-disclaimer">⚠ Demonstration system. Answers are generated from a synthetic regulatory corpus and are not legal advice.</div>
     `;
   } catch(e) {
     response.innerHTML = '<div style="color:var(--coral);padding:20px;font-size:12px">API unavailable. Ensure FastAPI is running.</div>';
@@ -723,7 +728,7 @@ async function renderAnalytics(){
 
   let stats = {total_vectors:0,total_regulations:0,jurisdictions:0,dimensions:0};
   let analytics = {total_queries:0,hallucination_blocked:0,hallucination_rate:0,avg_response_time:0,avg_similarity_score:0};
-  let evaluation = {available:false,retrieval_at_1:null,retrieval_at_3:null,retrieval_at_5:null,total_cases:0,failed_cases:0};
+  let evaluation = {available:false,family:null,shared:null,jurisdiction:null,jurisdiction_filtered:null,model:null};
 
   try {
     const [sRes, aRes, eRes] = await Promise.all([
@@ -749,10 +754,10 @@ async function renderAnalytics(){
     <div class="metric-card">
       <div class="metric-val">${stats.total_vectors}</div>
       <div class="metric-label">Vector chunks</div>
-      <div class="metric-sub"><span>${stats.dimensions}-dim</span> legal-bert</div>
+      <div class="metric-sub"><span>${stats.dimensions}-dim</span> BGE embeddings</div>
     </div>
     <div class="metric-card">
-      <div class="metric-val ${avgSim > 0.8 ? 'green' : avgSim > 0.6 ? 'amber' : ''}">${avgSim > 0 ? avgSim.toFixed(3) : '—'}</div>
+      <div class="metric-val ${avgSim > 0.65 ? 'green' : avgSim > 0.5 ? 'amber' : ''}">${avgSim > 0 ? avgSim.toFixed(3) : '—'}</div>
       <div class="metric-label">Avg similarity</div>
       <div class="metric-sub">cosine <span>similarity</span></div>
     </div>
@@ -813,41 +818,41 @@ async function renderAnalytics(){
       </div>
     `).join('');
 
-  // Retrieval accuracy panel - honest metrics
+  // Retrieval accuracy panel - scope-split tiers (family / shared / jurisdiction)
+  const tierRow = (label, tier, note) => {
+    if(!tier) return '';
+    const pct = v => (v*100).toFixed(0);
+    return `
+      <div style="margin-bottom:14px">
+        <div style="font-size:10px;font-weight:600;color:var(--text2);margin-bottom:6px;font-family:IBM Plex Mono,monospace">
+          ${label} <span style="color:var(--text3);font-weight:400">(n=${tier.n})</span>
+        </div>
+        <div class="accuracy-row"><div class="accuracy-label">R@1</div><div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${pct(tier['R@1'])}%"></div></div>
+          <div class="accuracy-val">${pct(tier['R@1'])}%</div></div></div>
+        <div class="accuracy-row"><div class="accuracy-label">R@3</div><div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${pct(tier['R@3'])}%"></div></div>
+          <div class="accuracy-val">${pct(tier['R@3'])}%</div></div></div>
+        <div class="accuracy-row"><div class="accuracy-label">R@5</div><div class="accuracy-bar-wrap">
+          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${pct(tier['R@5'])}%"></div></div>
+          <div class="accuracy-val">${pct(tier['R@5'])}%</div></div></div>
+        ${note?`<div style="font-size:9px;color:var(--text3);margin-top:4px;font-family:IBM Plex Mono,monospace">${note}</div>`:''}
+      </div>`;
+  };
   document.getElementById('accuracy-chart').innerHTML = evaluation.available ? `
-    <div style="margin-bottom:12px">
-      <div class="accuracy-row">
-        <div class="accuracy-label">Retrieval@1</div>
-        <div class="accuracy-bar-wrap">
-          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_1}%"></div></div>
-          <div class="accuracy-val">${evaluation.retrieval_at_1}%</div>
-        </div>
-      </div>
-      <div class="accuracy-row">
-        <div class="accuracy-label">Retrieval@3</div>
-        <div class="accuracy-bar-wrap">
-          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_3}%"></div></div>
-          <div class="accuracy-val">${evaluation.retrieval_at_3}%</div>
-        </div>
-      </div>
-      <div class="accuracy-row">
-        <div class="accuracy-label">Retrieval@5</div>
-        <div class="accuracy-bar-wrap">
-          <div class="accuracy-bar-track"><div class="accuracy-bar-fill" style="width:${evaluation.retrieval_at_5}%"></div></div>
-          <div class="accuracy-val">${evaluation.retrieval_at_5}%</div>
-        </div>
-      </div>
-    </div>
+    ${tierRow('Family scope', evaluation.family, 'clause valid across 4 regs · primary signal')}
+    ${tierRow('Shared scope', evaluation.shared, 'valid across all 20 · near-trivial sanity check')}
+    ${tierRow('Jurisdiction (raw)', evaluation.jurisdiction, 'semantic only · cannot split identical text')}
+    ${tierRow('Jurisdiction (filtered)', evaluation.jurisdiction_filtered, 'metadata filter applied · the live path')}
     <div style="font-size:9px;color:var(--text3);line-height:1.6;font-family:IBM Plex Mono,monospace;border-top:1px solid var(--border);padding-top:10px">
-      ${evaluation.total_cases} test cases evaluated.<br>
-      ${evaluation.failed_cases} failed at @5.<br>
-      Dataset: synthetic, 20 regulations, 9 clauses each.
+      Model: ${evaluation.model || 'n/a'}<br>
+      Tiers reported separately, never averaged.<br>
+      Dataset: synthetic, 5 regulatory families across 5 jurisdictions.
     </div>
   ` : `
     <div style="color:var(--text3);font-size:11px;padding:12px 0;font-family:IBM Plex Mono,monospace">
       No evaluation data available.<br>Run the evaluator to generate metrics.
-    </div>
-  `;
+    </div>`;
 }
 
 // ── Utilities ──────────────────────────────────────────────────────────────
