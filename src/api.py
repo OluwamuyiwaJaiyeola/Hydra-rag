@@ -12,9 +12,14 @@ import re
 from fastapi.responses import FileResponse
 import json as _json
 import os
+from pathlib import Path
+
+LOG_DIR = Path("logs")
+LOG_DIR.mkdir(exist_ok=True)
+LOG_FILE = LOG_DIR / "hydra_queries.log"
 
 logging.basicConfig(
-    filename="logs/hydra_queries.log",
+    filename=str(LOG_FILE),
     level=logging.INFO,
     format="%(asctime)s - %(message)s"
 )
@@ -687,7 +692,7 @@ def get_analytics():
         response_times = []
         similarity_scores = []
 
-        with open("logs/hydra_queries.log", "r") as f:
+        with open(LOG_FILE, "r") as f:
             for line in f:
                 if "query='" not in line:
                     continue
