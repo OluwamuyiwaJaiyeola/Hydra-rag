@@ -15,3 +15,6 @@ hydra_queries.log
 # macOS
 .DS_Store
 **/.DS_Store
+*.pdf
+*Transcript*
+.ipynb_checkpoints/
