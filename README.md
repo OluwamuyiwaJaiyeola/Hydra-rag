@@ -13,7 +13,7 @@ license: mit
 AI-powered regulatory compliance search and Q&A platform built with RAG (Retrieval Augmented Generation).
 
 ## Tech Stack
-- Embeddings: legal-bert-base-uncased (768-dim)
+- Embeddings: BAAI/bge-base-en-v1.5 (768-dim)
 - Vector DB: Pinecone
 - LLM: Phi-3-mini-4k-instruct via HuggingFace
 - API: FastAPI
